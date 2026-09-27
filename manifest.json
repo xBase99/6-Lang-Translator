@@ -1,0 +1,21 @@
+{
+  "name": "오프라인 AI 번역기",
+  "short_name": "AI번역",
+  "description": "인터넷 없이 동작하는 온디바이스 AI 번역기",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3898/3898082.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3898/3898082.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
