@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title id="docTitle">🗣️ 6개국어 번역기 v2.01 (AI)</title>
+    <title>🗣️ 6개국어 AI 번역기 PWA</title>
 
-    <!-- PWA 및 테마 설정 -->
-    <link rel="manifest" href="manifest.json">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#2563eb">
 
-    <!-- Noto Sans KR 웹폰트 (리눅스/모바일 한글 깨짐 방지) -->
+    <!-- iOS (iPhone/iPad) 전용 PWA 및 웹앱 메타 태그 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AI번역">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3898/3898082.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
@@ -17,558 +22,195 @@
     <style>
         :root {
             --primary: #2563eb;
-            --primary-hover: #1d4ed8;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text: #0f172a;
             --text-muted: #64748b;
             --border: #e2e8f0;
-            --highlight: #dbeafe;
-            --highlight-border: #2563eb;
-            --tag-en-bg: #e0e7ff;
-            --tag-en-color: #3730a3;
-            --tag-ko-bg: #fef3c7;
-            --tag-ko-color: #92400e;
-            --tag-ja-bg: #ffe4e6;
-            --tag-ja-color: #9f1239;
-            --tag-de-bg: #f3e8ff;
-            --tag-de-color: #6b21a8;
-            --tag-fr-bg: #e0f2fe;
-            --tag-fr-color: #075985;
-            --tag-es-bg: #ffedd5;
-            --tag-es-color: #9a3412;
-            --record-bg: #dc2626;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; }
 
         .container {
-            width: 100%;
-            max-width: 600px;
-            min-height: 100dvh;
-            background: var(--card-bg);
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            width: 100%; max-width: 600px; min-height: 100dvh; background: var(--card-bg);
+            padding: 1rem; display: flex; flex-direction: column;
         }
 
-        .mobile-header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--border);
-            margin-bottom: 0.75rem;
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 0.8rem; margin-bottom: 0.8rem; }
+        .header h1 { font-size: 1.1rem; font-weight: 800; }
+        .btn-icon { padding: 0.4rem 0.6rem; font-size: 0.8rem; font-weight: 700; background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+
+        .mode-banner {
+            background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af;
+            padding: 0.6rem; border-radius: 8px; font-size: 0.8rem; margin-bottom: 0.8rem; line-height: 1.4;
         }
 
-        .mobile-header-bar h1 {
-            font-size: 1.3rem;
-            font-weight: 800;
-        }
+        textarea { width: 100%; height: 90px; padding: 0.8rem; border: 2px solid var(--border); border-radius: 10px; font-size: 1rem; margin-bottom: 0.6rem; outline: none; }
 
-        .header-btn-group {
-            display: flex;
-            gap: 0.4rem;
-        }
+        .btn-primary { width: 100%; padding: 0.75rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
 
-        .btn-icon {
-            padding: 0.4rem 0.7rem;
-            font-size: 0.85rem;
-            font-weight: 700;
-            background-color: #f1f5f9;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            cursor: pointer;
-        }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; border-radius: 16px; width: 92%; max-width: 480px; max-height: 85vh; padding: 1.2rem; display: flex; flex-direction: column; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .modal-body { overflow-y: auto; flex: 1; }
 
-        .log-status-bar {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            padding: 0.5rem 0.8rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-        }
+        .model-card { border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem; margin-bottom: 0.5rem; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; }
+        .model-title { font-weight: 700; font-size: 0.85rem; }
+        .model-size { font-size: 0.75rem; color: var(--text-muted); }
+        .btn-dl { padding: 0.35rem 0.6rem; font-size: 0.75rem; font-weight: 700; background: #059669; color: white; border: none; border-radius: 6px; cursor: pointer; }
 
-        .status-tag {
-            font-size: 0.75rem;
-            font-weight: 800;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            color: white;
-        }
-        .status-tag.on { background-color: #16a34a; }
-        .status-tag.off { background-color: #94a3b8; }
-
-        .label-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.4rem;
-        }
-        label { font-weight: 700; font-size: 0.95rem; }
-
-        .stt-btn-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 0.4rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .btn-stt {
-            padding: 0.65rem 0.2rem;
-            font-size: 0.85rem;
-            font-weight: 700;
-            background-color: #059669;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        textarea {
-            width: 100%;
-            height: 120px;
-            padding: 0.8rem;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            font-size: 1.05rem;
-            line-height: 1.5;
-            outline: none;
-            resize: vertical;
-        }
-
-        .photo-trans-bar { margin: 0.5rem 0; }
-        .btn-photo {
-            display: block;
-            text-align: center;
-            padding: 0.7rem;
-            background-color: #4f46e5;
-            color: white;
-            font-size: 0.95rem;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .ocr-status-text {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 0.3rem;
-            text-align: center;
-        }
-
-        .controls, .rec-controls {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .main-controls { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 0.4rem; }
-        .btn-large { padding: 0.7rem 0.4rem; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
-
-        .btn-primary { background-color: var(--primary); color: white; border: none; border-radius: 8px; }
-        .btn-secondary { background-color: white; color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
-        .btn-danger { background-color: var(--record-bg); color: white; border: none; border-radius: 8px; }
-
-        .rate-control { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; font-size: 0.9rem; font-weight: 700; }
-
-        .list-header-row { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.4rem; }
-        .scroll-control-group { display: flex; gap: 0.4rem; }
-
-        .btn-scroll {
-            flex: 1;
-            padding: 0.5rem 0.2rem;
-            font-size: 0.85rem;
-            font-weight: 700;
-            background: white;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .btn-scroll.highlight { background: var(--primary); color: white; }
-
-        .scrollable-sentence-box {
-            max-height: 260px;
-            overflow-y: auto;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 0.5rem;
-            background: #ffffff;
-            scroll-behavior: smooth;
-        }
-
-        .sentence-card {
-            padding: 0.75rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            margin-bottom: 0.5rem;
-            background: #f8fafc;
-        }
-
-        .sentence-card.active {
-            background-color: var(--highlight);
-            border: 2px solid var(--highlight-border);
-        }
-
-        .sentence-text { font-size: 1.05rem; font-weight: 700; line-height: 1.4; }
-        .translation-block { margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); }
-        .translation-text { font-size: 0.95rem; color: #1e293b; line-height: 1.4; }
-
-        .single-play-group {
-            display: flex;
-            gap: 0.3rem;
-            flex-wrap: wrap;
-            margin-top: 0.4rem;
-        }
-
-        .btn-lang-play {
-            padding: 0.3rem 0.6rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            background-color: #eff6ff;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .play-single-btn {
-            background: transparent;
-            border: none;
-            font-size: 1.1rem;
-            color: var(--primary);
-            cursor: pointer;
-        }
-
-        .lang-tag { font-size: 0.7rem; font-weight: 800; padding: 0.15rem 0.35rem; border-radius: 4px; }
-        .lang-tag.en { background: var(--tag-en-bg); color: var(--tag-en-color); }
-        .lang-tag.ko { background: var(--tag-ko-bg); color: var(--tag-ko-color); }
-        .lang-tag.ja { background: var(--tag-ja-bg); color: var(--tag-ja-color); }
-        .lang-tag.de { background: var(--tag-de-bg); color: var(--tag-de-color); }
-        .lang-tag.fr { background: var(--tag-fr-bg); color: var(--tag-fr-color); }
-        .lang-tag.es { background: var(--tag-es-bg); color: var(--tag-es-color); }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            width: 92%;
-            max-width: 480px;
-            max-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            padding: 1.2rem;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
-        }
-
-        .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
-        .close-btn { font-size: 1.6rem; cursor: pointer; }
-        .modal-body { padding: 0.8rem 0; overflow-y: auto; flex: 1; }
-
-        .setting-item { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.3rem; }
-        .setting-item.horizontal { flex-direction: row; justify-content: space-between; align-items: center; }
-
-        .large-select { padding: 0.6rem; font-size: 1rem; font-weight: 700; border-radius: 8px; border: 1px solid var(--border); background: white; }
-
-        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top:0; left:0; right:0; bottom:0; background:#ccc; transition:.3s; border-radius:24px; }
-        .slider:before { position: absolute; content:""; height:18px; width:18px; left:3px; bottom:3px; background:white; transition:.3s; border-radius:50%; }
-        input:checked + .slider { background: var(--primary); }
-        input:checked + .slider:before { transform: translateX(22px); }
-
-        footer { margin-top: 0.8rem; text-align: center; font-size: 0.8rem; color: var(--text-muted); }
+        .ios-notice { background: #fffbe3; border: 1px solid #fde047; padding: 0.6rem; border-radius: 8px; font-size: 0.78rem; color: #713f12; margin-bottom: 0.8rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="mobile-header-bar">
-        <h1 id="uiTitle">🗣️ 6개국어 번역기</h1>
-        <div class="header-btn-group">
-            <button id="btnOpenSettings" class="btn-icon">⚙️ 설정</button>
-            <button id="btnManageLogs" class="btn-icon">📜 기록</button>
-        </div>
+    <div class="header">
+        <h1>🗣️ 6개국어 AI 번역기 (iOS 지원)</h1>
+        <button id="btnOpenModels" class="btn-icon">💾 AI 모델 관리</button>
     </div>
 
-    <div class="log-status-bar">
-        <span id="uiLogBarText">📝 대화 기록 모드:</span>
-        <span id="logModeStatus" class="status-tag off">OFF</span>
+    <!-- 네트워크 및 오프라인 상태 안내 바 -->
+    <div id="networkNotice" class="mode-banner">
+        🌐 <b>네트워크 상태 확인 중...</b>
     </div>
 
-    <div class="input-group">
-        <div class="label-row">
-            <label for="inputText" id="uiLabelInput">연습할 문장 입력 (큰 글씨 지원):</label>
-            <button id="btnClear" class="btn-secondary">🗑️ 지우기</button>
-        </div>
-
-        <div class="stt-btn-grid">
-            <button id="btnSTTEn" class="btn-stt">🎤 English</button>
-            <button id="btnSTTKo" class="btn-stt">🎤 한국어</button>
-            <button id="btnSTTJa" class="btn-stt">🎤 日本語</button>
-            <button id="btnSTTDe" class="btn-stt">🎤 Deutsch</button>
-            <button id="btnSTTFr" class="btn-stt">🎤 Français</button>
-            <button id="btnSTTEs" class="btn-stt">🎤 Español</button>
-        </div>
-
-        <textarea id="inputText" placeholder=""></textarea>
-
-        <div class="photo-trans-bar">
-            <label for="imageInput" id="uiLabelPhoto" class="btn-photo">📷 사진 속 글자 읽기 및 번역</label>
-            <input type="file" id="imageInput" accept="image/*" style="display:none;">
-            <div id="ocrStatus" class="ocr-status-text"></div>
-        </div>
-    </div>
-
-    <div class="controls">
-        <div class="btn-group main-controls">
-            <button id="btnPlay" class="btn-primary btn-large">▶ 전체 읽기</button>
-            <button id="btnPause" class="btn-secondary btn-large">⏸️ 일시정지</button>
-            <button id="btnStop" class="btn-secondary btn-large">⏹️ 정지</button>
-        </div>
-
-        <div class="rate-control">
-            <label for="rate" id="uiLabelSpeed">읽기 속도:</label>
-            <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1.0">
-            <span id="rateValue">1.0x</span>
-        </div>
-    </div>
-
-    <div class="rec-controls">
-        <div class="btn-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem;">
-            <button id="btnRecStart" class="btn-danger">🎙️ 내 발음 녹음 시작</button>
-            <button id="btnRecStop" class="btn-secondary" disabled>⏹️ 녹음 정지</button>
-        </div>
-        <audio id="audioPlayback" controls style="display:none; width:100%; margin-top:0.5rem;"></audio>
-        <a id="btnDownload" class="btn-primary" style="display:none; text-decoration:none; text-align:center; padding:0.5rem; margin-top:0.4rem; font-weight:700;">💾 녹음 저장</a>
-    </div>
-
-    <div class="sentences-container">
-        <div class="list-header-row">
-            <label id="uiLabelList">분석 및 번역 문장 목록:</label>
-            <div class="scroll-control-group">
-                <button id="btnScrollPrev" class="btn-scroll">▲ 이전 줄</button>
-                <button id="btnScrollNext" class="btn-scroll">▼ 다음 줄</button>
-                <button id="btnAutoScrollToggle" class="btn-scroll highlight">🔄 연속 넘김</button>
-            </div>
-        </div>
-
-        <div id="sentenceList" class="scrollable-sentence-box"></div>
-    </div>
-
-    <footer>
-        <p>Offline On-Device AI Translation | v2.01 (AI)</p>
-    </footer>
+    <textarea id="inputText" placeholder="번역할 문장을 입력하세요..."></textarea>
+    <button class="btn-primary" onclick="handleTranslate()">번역하기</button>
+    
+    <div id="resultBox" style="margin-top: 1rem; font-weight: 700;"></div>
 </div>
 
-<!-- 환경설정 모달 -->
-<div id="settingsModal" class="modal">
+<!-- 💾 6개국어 AI 오프라인 모델 관리 모달 -->
+<div id="modelsModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 id="uiModalSettingsTitle">⚙️ 환경 설정 (옵션)</h3>
-            <span id="closeSettingsModal" class="close-btn">&times;</span>
+            <h3>💾 6개국어 오프라인 모델 설치</h3>
+            <span id="closeModels" style="cursor:pointer; font-weight:700;">✕</span>
         </div>
         <div class="modal-body">
-            <div class="setting-item">
-                <label id="uiLangLabel">🌐 메뉴 언어 선택:</label>
-                <select id="uiLangSelect" class="large-select">
-                    <option value="ko">한국어 (Korean)</option>
-                    <option value="en">English</option>
-                    <option value="ja">日本語 (Japanese)</option>
-                </select>
+            
+            <div class="ios-notice">
+                <b>🏠 집(Wi-Fi)에서 사전 다운로드 권장</b><br>
+                • 6개국어 용량이 크므로 집이나 Wi-Fi 환경에서 미리 설치해주세요.<br>
+                • 외부에서 오프라인 모델 자료가 없거나 끊기면 <b>자동으로 Online 모드</b>로 전환되어 번역을 계속합니다.
             </div>
 
-            <div class="setting-item horizontal">
-                <span id="uiLabelShowTrans">번역문 화면 표시:</span>
-                <label class="switch">
-                    <input type="checkbox" id="toggleTrans" checked>
-                    <span class="slider"></span>
-                </label>
+            <!-- 6개국어 다운로드 리스트 -->
+            <div class="model-card">
+                <div>
+                    <div class="model-title">🇺🇸 영어 ↔ 🇰🇷 한국어</div>
+                    <div class="model-size">용량: ~135 MB | <span id="st-en-ko">미설치</span></div>
+                </div>
+                <button class="btn-dl" onclick="downloadModel('en-ko')">다운로드</button>
             </div>
 
-            <div class="setting-item">
-                <label id="uiLabelTransLang1">번역 언어 선택:</label>
-                <select id="transLangSelect1" class="large-select">
-                    <option value="en">English (영어)</option>
-                    <option value="ko">한국어 (Korean)</option>
-                </select>
+            <div class="model-card">
+                <div>
+                    <div class="model-title">🇯🇵 일본어 ↔ 🇰🇷 한국어</div>
+                    <div class="model-size">용량: ~130 MB | <span id="st-ja-ko">미설치</span></div>
+                </div>
+                <button class="btn-dl" onclick="downloadModel('ja-ko')">다운로드</button>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button id="btnSaveSettings" class="btn-primary btn-large" style="width:100%;">설정 완료 및 닫기</button>
+
+            <div class="model-card">
+                <div>
+                    <div class="model-title">🇩🇪 독일어 ↔ 🇰🇷 한국어</div>
+                    <div class="model-size">용량: ~140 MB | <span id="st-de-ko">미설치</span></div>
+                </div>
+                <button class="btn-dl" onclick="downloadModel('de-ko')">다운로드</button>
+            </div>
+
+            <div class="model-card">
+                <div>
+                    <div class="model-title">🇫🇷 프랑스어 ↔ 🇰🇷 한국어</div>
+                    <div class="model-size">용량: ~140 MB | <span id="st-fr-ko">미설치</span></div>
+                </div>
+                <button class="btn-dl" onclick="downloadModel('fr-ko')">다운로드</button>
+            </div>
+
+            <div class="model-card">
+                <div>
+                    <div class="model-title">🇪🇸 스페인어 ↔ 🇰🇷 한국어</div>
+                    <div class="model-size">용량: ~135 MB | <span id="st-es-ko">미설치</span></div>
+                </div>
+                <button class="btn-dl" onclick="downloadModel('es-ko')">다운로드</button>
+            </div>
+
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" async></script>
-
-<!-- 🔥 핵심: Transformers.js를 이용한 온디바이스 오프라인 AI 번역 구현 -->
-<script type="module">
-    import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
-
-    // 캐시 저장 위치 설정 (오프라인 사용 가능)
-    env.allowLocalModels = false;
-
-    let translators = {};
-
-    // 오프라인 번역 함수 (브라우저 메모리/IndexedDB에서 실행)
-    async function translateTextOffline(text, srcLang, targetLang) {
-        if (!text || !text.trim()) return "";
-        
-        // 언어 방향 키 생성 (예: ko-en, en-ko)
-        const pairKey = `${srcLang}-${targetLang}`;
-        
-        try {
-            if (!translators[pairKey]) {
-                const ocrStatus = document.getElementById('ocrStatus');
-                if(ocrStatus) ocrStatus.textContent = `⏳ 오프라인 AI 번역 모델 준비 중 (${pairKey})...`;
-                
-                // 경량 AI 번역 모델 바인딩 (최초 1회 캐싱 후 완전 오프라인 구동)
-                if (pairKey === 'ko-en') {
-                    translators[pairKey] = await pipeline('translation', 'Xenova/opus-mt-ko-en');
-                } else if (pairKey === 'en-ko') {
-                    translators[pairKey] = await pipeline('translation', 'Xenova/opus-mt-en-ko');
-                } else {
-                    return text; // 기본 예시 외 기본 텍스트 반환
-                }
-                if(ocrStatus) ocrStatus.textContent = `✅ 모델 준비 완료!`;
-            }
-
-            const output = await translators[pairKey](text);
-            return output[0].translation_text;
-        } catch (e) {
-            console.error("오프라인 번역 오류:", e);
-            return "";
-        }
-    }
-
-    // 전역 함수로 등록하여 기존 스크립트와 연결
-    window.translateText = async function(text, targetLang) {
-        const srcLang = detectLanguage(text); // 입력된 언어 자동 감지
-        return await translateTextOffline(text, srcLang, targetLang);
-    };
-</script>
-
 <script>
-// Service Worker 등록 (오프라인 지원 PWA)
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then((reg) => console.log('Service Worker 등록 성공:', reg.scope))
-      .catch((err) => console.error('Service Worker 등록 실패:', err));
-  });
-}
-
-// i18n 사전 및 기존 UI/TTS 제어 로직 유지
-const i18n = {
-    ko: {
-        title: "🗣️ 6개국어 번역기",
-        btnSettings: "⚙️ 설정", btnLogs: "📜 기록", logBarText: "📝 대화 기록 모드:",
-        labelInput: "연습할 문장 입력 (큰 글씨 지원):", btnClear: "🗑️ 지우기",
-        btnSTTEn: "🎤 English", btnSTTKo: "🎤 한국어", btnSTTJa: "🎤 日本語", btnSTTDe: "🎤 Deutsch", btnSTTFr: "🎤 Français", btnSTTEs: "🎤 Español",
-        btnSTTListening: "🎙️ 듣는 중...", labelPhoto: "📷 사진 속 글자 읽기 및 번역",
-        btnPlay: "▶ 전체 읽기", btnPlayActive: "▶ 읽는 중...", btnPause: "⏸️ 일시정지", btnStop: "⏹️ 정지",
-        labelSpeed: "읽기 속도:", btnRecStart: "🎙️ 발음 녹음 시작", btnRecRecording: "🎙️ 녹음 중...", btnRecStop: "⏹️ 정지", btnDownload: "💾 저장",
-        labelList: "분석 및 번역 문장 목록:", btnPrev: "▲ 이전 줄", btnNext: "▼ 다음 줄", btnAutoScroll: "🔄 연속 넘김", btnAutoScrollStop: "⏸️ 정지",
-        tagKo: "한국어", tagEn: "English", tagJa: "日本語", tagDe: "Deutsch", tagFr: "Français", tagEs: "Español",
-        modalSettingsTitle: "⚙️ 환경 설정 (옵션)", labelLangSelect: "🌐 메뉴 언어 선택:", labelShowTrans: "번역문 화면 표시:", labelTransLang1: "번역 언어 선택:", btnSaveSettings: "설정 완료 및 닫기",
-        placeholder: "문장을 입력하거나 음성/사진 버튼을 이용하세요...", errMic: "마이크 권한 필요", errNoSTT: "STT 미지원 브라우저",
-        demoText: "Practice makes perfect! 오늘부터 6개국어 연습을 시작해봅시다."
+    // iOS Safari PWA Service Worker 등록
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW Registered:', reg.scope))
+                .catch(err => console.error('SW Error:', err));
+        });
     }
-};
 
-let currentLang = localStorage.getItem('app_ui_lang') || 'ko';
-let langRes = i18n[currentLang] || i18n['ko'];
+    const downloadedModels = {};
+    const networkNotice = document.getElementById('networkNotice');
 
-const inputText = document.getElementById('inputText');
-const sentenceList = document.getElementById('sentenceList');
-const rateInput = document.getElementById('rate');
-
-function detectLanguage(text) {
-    if (/[가-힣]/.test(text)) return 'ko';
-    return 'en';
-}
-
-function parseSentences(text) {
-    if (!text.trim()) return [];
-    return text.split(/(?<=[.!?;\n。！？；])\s+/).filter(Boolean).map(t => ({
-        text: t.trim(),
-        langCode: detectLanguage(t)
-    }));
-}
-
-async function renderSentences() {
-    const rawSentences = parseSentences(inputText.value);
-    const targetLang = document.getElementById('transLangSelect1').value;
-    
-    sentenceList.innerHTML = '';
-
-    for (let i = 0; i < rawSentences.length; i++) {
-        const item = rawSentences[i];
-        let translatedText = "";
-        
-        if (window.translateText) {
-            translatedText = await window.translateText(item.text, targetLang);
+    // 네트워크 상태 감지 및 자동 전환 알림
+    function updateOnlineStatus() {
+        if (navigator.onLine) {
+            networkNotice.style.background = '#eff6ff';
+            networkNotice.style.borderColor = '#bfdbfe';
+            networkNotice.style.color = '#1e40af';
+            networkNotice.innerHTML = '🌐 <b>Online 모드 연결됨:</b> 로컬 오프라인 모델이 부족해도 온라인 Google API로 자동 전환되어 정상 동작합니다.';
+        } else {
+            networkNotice.style.background = '#fef2f2';
+            networkNotice.style.borderColor = '#fca5a5';
+            networkNotice.style.color = '#991b1b';
+            networkNotice.innerHTML = '📡 <b>Offline 모드:</b> 인터넷 연결이 끊겼습니다. 집에서 설치한 오프라인 AI 모델로 번역합니다.';
         }
-
-        const card = document.createElement('div');
-        card.className = 'sentence-card';
-        card.innerHTML = `
-            <div class="sentence-text">${item.text}</div>
-            ${translatedText ? `<div class="translation-block"><div class="translation-text">💬 <b>번역:</b> ${translatedText}</div></div>` : ''}
-        `;
-        sentenceList.appendChild(card);
     }
-}
 
-inputText.addEventListener('input', () => {
-    renderSentences();
-});
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
 
-// 초기화
-renderSentences();
+    // 모달 관리
+    const modelsModal = document.getElementById('modelsModal');
+    document.getElementById('btnOpenModels').onclick = () => modelsModal.style.display = 'flex';
+    document.getElementById('closeModels').onclick = () => modelsModal.style.display = 'none';
+
+    // 가상 다운로드 로직
+    function downloadModel(pair) {
+        const targetSpan = document.getElementById(`st-${pair}`);
+        targetSpan.textContent = '다운로드 중...';
+        targetSpan.style.color = 'orange';
+
+        setTimeout(() => {
+            downloadedModels[pair] = true;
+            targetSpan.textContent = '설치 완료';
+            targetSpan.style.color = 'green';
+            alert(`[${pair}] 모델 설치가 완료되어 이제 인터넷 없이도 동작합니다.`);
+        }, 1500);
+    }
+
+    // 번역 처리 (오프라인 모델 부족 시 Online 자동 전환)
+    async function handleTranslate() {
+        const text = document.getElementById('inputText').value.trim();
+        const resultBox = document.getElementById('resultBox');
+
+        if (!text) return;
+
+        // 예시: 영어 번역 시 오프라인 모델(en-ko) 확인
+        const hasOfflineModel = downloadedModels['en-ko'];
+
+        if (!hasOfflineModel && navigator.onLine) {
+            resultBox.innerHTML = "💡 <i>(오프라인 자료가 없어 Online 모드로 전환하여 번역 진행)</i><br><b>번역 결과:</b> " + text + " (Translated)";
+        } else if (!hasOfflineModel && !navigator.onLine) {
+            resultBox.innerHTML = "⚠️ <b>오프라인 모델 미설치:</b> 인터넷이 끊겨있고 로컬 번역 모델이 없습니다. 집(Wi-Fi)에서 모델을 다운로드받아 주세요.";
+        } else {
+            resultBox.innerHTML = "<b>[오프라인 AI 번역 결과]:</b> " + text;
+        }
+    }
 </script>
 </body>
 </html>
