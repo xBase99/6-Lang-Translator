@@ -3,186 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>🗣️ 6개국어 AI 번역기 PWA</title>
+    <title>🗣️ 6개국어 실시간 대화 & 고속 번역기 PWA (v2.02 AI)</title>
 
-    <!-- PWA Manifest 연동 -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#2563eb">
 
-    <!-- iOS (iPhone/iPad) 전용 PWA 및 웹앱 메타 태그 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="AI번역">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3898/3898082.png">
 
-    <!-- Noto Sans KR 웹폰트 -->
+    <!-- 글로벌 한국어/다국어 폰트 기본 적용 (미설치 기기 대응) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary: #2563eb;
-            --primary-hover: #1d4ed8;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text: #0f172a;
             --text-muted: #64748b;
             --border: #e2e8f0;
-            --record-bg: #dc2626;
+            --my-bubble: #dbeafe;
+            --partner-bubble: #f1f5f9;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', 'Noto Sans JP', 'Noto Sans', sans-serif; }
         html, body { width: 100%; height: 100%; background-color: var(--bg); color: var(--text); }
         body { display: flex; justify-content: center; align-items: flex-start; }
 
         .container {
-            width: 100%;
-            max-width: 600px;
-            min-height: 100dvh;
-            background: var(--card-bg);
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
+            width: 100%; max-width: 650px; min-height: 100dvh; background: var(--card-bg);
+            padding: 1rem; display: flex; flex-direction: column;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
         .mobile-header-bar {
             display: flex; justify-content: space-between; align-items: center;
-            padding-bottom: 0.75rem; border-bottom: 2px solid var(--border); margin-bottom: 0.75rem;
+            padding-bottom: 0.6rem; border-bottom: 2px solid var(--border); margin-bottom: 0.6rem;
         }
         .mobile-header-bar h1 { font-size: 1.1rem; font-weight: 800; }
-        .header-btn-group { display: flex; gap: 0.3rem; }
-        .btn-icon { padding: 0.4rem 0.6rem; font-size: 0.8rem; font-weight: 700; background-color: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+        .header-btn-group { display: flex; gap: 0.3rem; align-items: center; }
+        .btn-icon { padding: 0.4rem 0.55rem; font-size: 0.78rem; font-weight: 700; background-color: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; text-decoration: none; color: var(--text); display: inline-flex; align-items: center; }
+        .btn-fast-highlight { background-color: #eff6ff; border-color: #3b82f6; color: #1d4ed8; }
+        .btn-trip { background-color: #003580; color: white; border: none; }
+
+        /* UI 메뉴 언어 선택 드롭다운 */
+        .ui-lang-select { padding: 0.35rem 0.4rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; border: 1px solid var(--border); background: white; }
 
         .mode-banner {
             background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af;
-            padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.8rem; margin-bottom: 0.75rem; line-height: 1.4;
+            padding: 0.45rem 0.75rem; border-radius: 8px; font-size: 0.78rem; font-weight: 700;
+            margin-bottom: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        .prompt-recommend-box { margin-bottom: 0.75rem; }
-        .prompt-title { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.3rem; }
-        .prompt-tags { display: flex; gap: 0.4rem; overflow-x: auto; padding-bottom: 0.2rem; }
-        .prompt-chip { white-space: nowrap; background: #f1f5f9; border: 1px solid var(--border); border-radius: 16px; padding: 0.3rem 0.7rem; font-size: 0.78rem; font-weight: 700; cursor: pointer; color: #334155; }
+        .partner-lang-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #f8fafc; border: 1px solid var(--border); border-radius: 8px;
+            padding: 0.5rem 0.75rem; margin-bottom: 0.6rem;
+        }
+        .partner-lang-bar label { font-size: 0.85rem; font-weight: 700; color: #334155; }
+        .lang-select-sm { padding: 0.35rem 0.5rem; font-size: 0.82rem; font-weight: 700; border-radius: 6px; border: 1px solid var(--border); background: white; }
 
-        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
-        label { font-weight: 700; font-size: 0.9rem; }
+        /* 💡 옵션 조절이 가능한 대화창 (기본 약 5줄 표시) */
+        .chat-history-box {
+            flex: none; height: 220px; overflow-y: auto;
+            border: 2px solid var(--border); border-radius: 10px; padding: 0.75rem;
+            background: #fafafa; margin-bottom: 0.6rem; display: flex; flex-direction: column; gap: 0.6rem;
+            transition: height 0.3s ease;
+        }
 
-        .stt-btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin-bottom: 0.5rem; }
-        .btn-stt { padding: 0.55rem 0.2rem; font-size: 0.8rem; font-weight: 700; background-color: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .chat-bubble { max-width: 88%; padding: 0.6rem 0.85rem; border-radius: 10px; font-size: 0.9rem; line-height: 1.4; }
+        .chat-me { align-self: flex-end; background: var(--my-bubble); color: #1e3a8a; border-bottom-right-radius: 2px; }
+        .chat-partner { align-self: flex-start; background: var(--partner-bubble); color: #0f172a; border-bottom-left-radius: 2px; border: 1px solid var(--border); }
+        .chat-meta { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.2rem; font-weight: 700; }
+        .chat-trans { margin-top: 0.35rem; padding-top: 0.35rem; border-top: 1px dashed #cbd5e1; font-size: 0.85rem; color: #1e293b; }
+        .btn-tts { margin-top: 0.35rem; padding: 0.2rem 0.45rem; font-size: 0.72rem; font-weight: 700; background: white; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; }
 
-        textarea { width: 100%; height: 90px; padding: 0.8rem; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; line-height: 1.4; outline: none; resize: vertical; }
+        /* 입력 및 다국어 번역 결과 영역 */
+        textarea { width: 100%; height: 75px; padding: 0.6rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; resize: none; }
+        .stt-speak-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-top: 0.4rem; }
+        .btn-speak-me { padding: 0.65rem; font-size: 0.85rem; font-weight: 700; background-color: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .btn-speak-partner { padding: 0.65rem; font-size: 0.85rem; font-weight: 700; background-color: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .btn-reset { width: 100%; padding: 0.35rem; margin-top: 0.3rem; background: transparent; border: none; color: var(--text-muted); font-size: 0.78rem; text-decoration: underline; cursor: pointer; }
 
-        .photo-trans-bar { margin: 0.5rem 0; }
-        .btn-photo { display: block; text-align: center; padding: 0.6rem; background-color: #4f46e5; color: white; font-size: 0.85rem; font-weight: 700; border-radius: 8px; cursor: pointer; }
-        .ocr-status-text { font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-top: 0.3rem; text-align: center; }
+        /* 💡 복원 및 확장된 하단 다국어 번역 및 분석 창 */
+        .live-translation-panel {
+            margin-top: 0.6rem; padding: 0.75rem; background: #f1f5f9; border: 1px solid var(--border); border-radius: 10px;
+        }
+        .live-trans-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; font-size: 0.82rem; font-weight: 700; color: #334155; }
+        .live-trans-body { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem; font-size: 0.88rem; min-height: 48px; line-height: 1.45; word-break: break-all; }
+        .live-trans-tools { display: flex; justify-content: flex-end; gap: 0.4rem; margin-top: 0.4rem; }
+        .btn-sub-tool { padding: 0.25rem 0.5rem; font-size: 0.72rem; font-weight: 700; background: white; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; }
 
-        .controls, .rec-controls { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 0.75rem; margin-bottom: 0.75rem; }
-        .main-controls { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 0.4rem; }
-        .btn-large { padding: 0.65rem 0.4rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
-        .btn-primary { background-color: var(--primary); color: white; border: none; border-radius: 8px; }
-        .btn-secondary { background-color: white; color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
-        .btn-danger { background-color: var(--record-bg); color: white; border: none; border-radius: 8px; }
+        .controls { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem; margin-top: 0.5rem; }
+        .rate-control { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: 700; }
 
-        .rate-control { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; font-size: 0.85rem; font-weight: 700; }
+        /* 푸터 저작권 표기 */
+        .copyright-bar { text-align: center; margin-top: 0.6rem; font-size: 0.72rem; color: var(--text-muted); font-weight: 700; }
 
-        .scrollable-sentence-box { max-height: 220px; overflow-y: auto; border: 2px solid var(--border); border-radius: 10px; padding: 0.5rem; background: #ffffff; }
-        .sentence-card { padding: 0.7rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0.5rem; background: #f8fafc; }
-        .sentence-text { font-size: 1rem; font-weight: 700; }
-        .translation-block { margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); font-size: 0.9rem; color: #1e293b; display: flex; justify-content: space-between; align-items: center; }
-
+        /* 모달 스타일 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; border-radius: 16px; width: 92%; max-width: 480px; max-height: 85vh; display: flex; flex-direction: column; padding: 1.2rem; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
-        .close-btn { font-size: 1.5rem; cursor: pointer; font-weight: 700; }
+        .modal-content { background: white; border-radius: 14px; width: 92%; max-width: 500px; max-height: 85vh; display: flex; flex-direction: column; padding: 1rem; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+        .close-btn { font-size: 1.4rem; cursor: pointer; font-weight: 700; }
         .modal-body { padding: 0.8rem 0; overflow-y: auto; flex: 1; }
 
-        .setting-item { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
-        .large-select { padding: 0.6rem; font-size: 0.9rem; font-weight: 700; border-radius: 8px; border: 1px solid var(--border); background: white; }
-
-        .model-card { border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; margin-bottom: 0.5rem; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; }
-        .model-info-title { font-weight: 700; font-size: 0.85rem; }
-        .model-info-detail { font-size: 0.75rem; color: var(--text-muted); }
-        .btn-download { padding: 0.35rem 0.6rem; font-size: 0.75rem; font-weight: 700; background: #059669; color: white; border: none; border-radius: 6px; cursor: pointer; }
-
-        .ios-notice { background: #fffbe3; border: 1px solid #fde047; padding: 0.6rem; border-radius: 8px; font-size: 0.78rem; color: #713f12; margin-bottom: 0.8rem; line-height: 1.4; }
+        .fast-trans-area { width: 100%; height: 110px; padding: 0.6rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.88rem; margin-bottom: 0.5rem; outline: none; }
+        .fast-result-box { width: 100%; min-height: 110px; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem; font-size: 0.88rem; line-height: 1.45; white-space: pre-wrap; word-break: break-all; }
+        .btn-fast-exec { width: 100%; padding: 0.65rem; background-color: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.98rem; cursor: pointer; margin-bottom: 0.6rem; }
+        
+        .setting-item { margin-bottom: 0.8rem; display: flex; flex-direction: column; gap: 0.35rem; }
+        .large-select { padding: 0.55rem; font-size: 0.85rem; font-weight: 700; border-radius: 8px; border: 1px solid var(--border); background: white; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="mobile-header-bar">
-        <h1>🗣️ 6개국어 번역기 (iOS 지원)</h1>
+        <h1 id="uiTitle">🗣️ 6개국어 대화 번역기</h1>
         <div class="header-btn-group">
-            <button id="btnOpenModels" class="btn-icon">💾 AI 모델</button>
-            <button id="btnOpenSettings" class="btn-icon">⚙️ 설정</button>
+            <!-- UI 언어 선택 옵션 -->
+            <select id="uiLangSelect" class="ui-lang-select" onchange="changeUILanguage(this.value)">
+                <option value="ko">🇰🇷 한국어</option>
+                <option value="en">🇺🇸 English</option>
+                <option value="ja">🇯🇵 日本語</option>
+            </select>
+            <a href="https://www.trip.com" target="_blank" class="btn-icon btn-trip">✈️ Trip.com</a>
+            <button id="btnOpenFastTrans" class="btn-icon btn-fast-highlight">⚡ <span id="uiBtnFast">고속 번역</span></button>
+            <button id="btnOpenSettings" class="btn-icon">⚙️ <span id="uiBtnSettings">설정</span></button>
         </div>
     </div>
 
-    <!-- 네트워크 감지 및 안내 상태바 -->
+    <!-- 네트워크 상태 바 -->
     <div id="networkNotice" class="mode-banner">
-        🌐 <b>네트워크 상태 확인 중...</b>
+        🌐 <b>Online 모드 연결됨</b> (실시간 구글 고속 번역 엔진 작동 중)
     </div>
 
-    <div class="prompt-recommend-box">
-        <div class="prompt-title">💡 AI 추천 대화 (터치 시 입력):</div>
-        <div class="prompt-tags">
-            <button class="prompt-chip" onclick="applyPrompt('Could you please tell me where the station is?')">🚉 역 위치 묻기</button>
-            <button class="prompt-chip" onclick="applyPrompt('I would like to order an iced Americano.')">☕ 커피 주문하기</button>
-            <button class="prompt-chip" onclick="applyPrompt('How much is this? Can I get a receipt?')">🛍️ 영수증 요청</button>
-            <button class="prompt-chip" onclick="applyPrompt('Could you recommend a good local restaurant?')">🍽️ 맛집 추천</button>
+    <!-- 상대방 언어 선택 영역 -->
+    <div class="partner-lang-bar">
+        <label for="partnerLangSelect" id="uiPartnerLangLabel">🤝 상대방 언어 선택:</label>
+        <select id="partnerLangSelect" class="lang-select-sm" onchange="resetChatNotice()">
+            <option value="en">English (영어)</option>
+            <option value="de">Deutsch (독일어)</option>
+            <option value="fr">Français (프랑스어)</option>
+            <option value="es">Español (스페인어)</option>
+            <option value="ja">日本語 (일본어)</option>
+            <option value="ko">한국어 (Korean)</option>
+        </select>
+    </div>
+
+    <!-- 💡 높이 조절 가능한 대화 창 (기본 약 5줄 표시) -->
+    <div id="chatHistory" class="chat-history-box">
+        <div class="chat-bubble chat-partner">
+            <div class="chat-meta" id="uiNoticeHeader">👋 안내</div>
+            <span id="uiNoticeText">상대방 언어를 선택한 후, 아래 입력창을 이용하거나 음성으로 대화를 주고받아 보세요.</span>
         </div>
     </div>
 
     <div class="input-group">
-        <div class="label-row">
-            <label for="inputText">입력 문장:</label>
-            <button id="btnClear" class="btn-secondary" style="padding:0.2rem 0.5rem; font-size:0.8rem;">🗑️ 지우기</button>
+        <textarea id="inputText" placeholder="전송할 대화 내용을 입력하거나 아래 음성 버튼을 누르세요..." oninput="handleLiveTranslation()"></textarea>
+
+        <div class="stt-speak-grid">
+            <button id="uiBtnSpeakMe" class="btn-speak-me" onclick="handleSendMessage('me')">🇰🇷 내가 말하기 (전송)</button>
+            <button id="uiBtnSpeakPartner" class="btn-speak-partner" onclick="handleSendMessage('partner')">🌐 상대방이 말하기</button>
         </div>
+        <button id="uiBtnReset" class="btn-reset" onclick="clearChat()">🗑️ 대화 내용 초기화</button>
+    </div>
 
-        <div class="stt-btn-grid">
-            <button class="btn-stt" onclick="startSTT('en-US')">🎤 English</button>
-            <button class="btn-stt" onclick="startSTT('ko-KR')">🎤 한국어</button>
-            <button class="btn-stt" onclick="startSTT('ja-JP')">🎤 日本語</button>
-            <button class="btn-stt" onclick="startSTT('de-DE')">🎤 Deutsch</button>
-            <button class="btn-stt" onclick="startSTT('fr-FR')">🎤 Français</button>
-            <button class="btn-stt" onclick="startSTT('es-ES')">🎤 Español</button>
+    <!-- 💡 복원 및 확장된 하단 다국어 번역 출력 창 -->
+    <div class="live-translation-panel">
+        <div class="live-trans-header">
+            <span id="uiLiveTransTitle">🌐 실시간 다국어 번역 창 (미리보기)</span>
+            <select id="liveTargetLang" class="lang-select-sm" style="padding:0.2rem 0.4rem; font-size:0.75rem;" onchange="handleLiveTranslation()">
+                <option value="en">Translate to English</option>
+                <option value="ko">한국어로 번역</option>
+                <option value="ja">日本語に翻訳</option>
+                <option value="de">Auf Deutsch</option>
+                <option value="fr">En Français</option>
+                <option value="es">En Español</option>
+            </select>
         </div>
-
-        <textarea id="inputText" placeholder="문장을 입력하거나 음성/사진 버튼을 누르세요..."></textarea>
-
-        <div class="photo-trans-bar">
-            <label for="imageInput" class="btn-photo">📷 사진 속 글자 읽기 (카메라/갤러리)</label>
-            <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="processOCR(this)">
-            <div id="ocrStatus" class="ocr-status-text"></div>
+        <div id="liveTransBody" class="live-trans-body">입력한 내용이 실시간으로 다국어로 번역되어 여기에 나타납니다.</div>
+        <div class="live-trans-tools">
+            <button class="btn-sub-tool" onclick="copyLiveTranslation()">📋 <span id="uiBtnCopy">결과 복사</span></button>
+            <button class="btn-sub-tool" onclick="speakLiveTranslation()">🔊 <span id="uiBtnListen">듣기</span></button>
         </div>
     </div>
 
     <div class="controls">
-        <div class="btn-group main-controls">
-            <button id="btnPlay" class="btn-primary btn-large" onclick="speakText()">▶ 전체 읽기</button>
-            <button id="btnPause" class="btn-secondary btn-large" onclick="pauseSpeech()">⏸️ 일시정지</button>
-            <button id="btnStop" class="btn-secondary btn-large" onclick="stopSpeech()">⏹️ 정지</button>
-        </div>
-
         <div class="rate-control">
-            <label for="rate">읽기 속도:</label>
+            <label for="rate" id="uiRateLabel">음성 읽기 속도:</label>
             <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('rateValue').textContent = this.value + 'x'">
             <span id="rateValue">1.0x</span>
         </div>
     </div>
 
-    <div class="rec-controls">
-        <div class="btn-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem;">
-            <button id="btnRecStart" class="btn-danger" onclick="startRecording()">🎙️ 내 발음 녹음 시작</button>
-            <button id="btnRecStop" class="btn-secondary" onclick="stopRecording()" disabled>⏹️ 녹음 정지</button>
-        </div>
-        <audio id="audioPlayback" controls style="display:none; width:100%; margin-top:0.5rem;"></audio>
+    <!-- 저작권 표기 -->
+    <div class="copyright-bar">
+        © 2026 2.02 AI Multilingual Conversation System. All rights reserved.
     </div>
+</div>
 
-    <div class="sentences-container">
-        <label style="display:block; margin-bottom:0.4rem;">번역 결과:</label>
-        <div id="sentenceList" class="scrollable-sentence-box"></div>
+<!-- ⚡ 고속 번역 전용 모달 창 -->
+<div id="fastTransModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="uiFastModalTitle">⚡ 긴 문장 고속 번역</h3>
+            <span id="closeFastTrans" class="close-btn">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="setting-item">
+                <label id="uiFastDirLabel">🎯 번역 방향:</label>
+                <select id="fastLangPair" class="large-select">
+                    <option value="auto|ko">자동 감지 ➡️ 한국어</option>
+                    <option value="ko|en">한국어 ➡️ 영어</option>
+                    <option value="en|ko">영어 ➡️ 한국어</option>
+                    <option value="de|ko">독일어 ➡️ 한국어</option>
+                    <option value="fr|ko">프랑스어 ➡️ 한국어</option>
+                    <option value="es|ko">스페인어 ➡️ 한국어</option>
+                    <option value="ja|ko">일본어 ➡️ 한국어</option>
+                </select>
+            </div>
+            <textarea id="fastInputText" class="fast-trans-area" placeholder="번역할 긴 문장이나 문단을 이곳에 붙여넣으세요..."></textarea>
+            <button id="uiBtnExecFast" class="btn-fast-exec" onclick="execFastTranslation()">🚀 고속 번역 실행</button>
+            
+            <label id="uiFastResultLabel" style="font-size:0.82rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.3rem;">번역 결과:</label>
+            <div id="fastResultBox" class="fast-result-box">결과가 여기에 표시됩니다.</div>
+        </div>
     </div>
 </div>
 
@@ -190,313 +240,318 @@
 <div id="settingsModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>⚙️ 환경 설정</h3>
+            <h3 id="uiSettingsTitle">⚙️ 환경 설정</h3>
             <span id="closeSettings" class="close-btn">&times;</span>
         </div>
         <div class="modal-body">
+            <!-- 💡 대화창 크기 조절 옵션 -->
             <div class="setting-item">
-                <label>🌐 번역 모드 선택:</label>
-                <select id="translationModeSelect" class="large-select">
-                    <option value="auto">자동 전환 모드 (오프라인 우선 + 온라인 연결)</option>
-                    <option value="online">Online 모드 (Google API)</option>
-                    <option value="offline">Offline 전용 모드 (내장 AI만 사용)</option>
+                <label id="uiChatHeightLabel">📏 대화창 크기 (줄 수 설정):</label>
+                <select id="chatHeightSelect" class="large-select" onchange="applyChatHeight(this.value)">
+                    <option value="220px">컴팩트 (약 5줄 표시 - 기본)</option>
+                    <option value="350px">보통 (약 10줄 표시)</option>
+                    <option value="500px">확대 (약 15줄 이상 표시)</option>
                 </select>
             </div>
             <div class="setting-item">
-                <label>🎯 번역 대상 언어 선택:</label>
-                <select id="targetLangSelect" class="large-select" onchange="renderTranslation()">
-                    <option value="en">English (영어)</option>
-                    <option value="ko">한국어 (Korean)</option>
-                    <option value="ja">日本語 (일본어)</option>
-                    <option value="de">Deutsch (독일어)</option>
-                    <option value="fr">Français (프랑스어)</option>
-                    <option value="es">Español (스페인어)</option>
-                </select>
-            </div>
-            <div class="setting-item">
-                <label>🔊 자동 읽기 (Auto-Play):</label>
+                <label id="uiAutoPlayLabel">🔊 자동 읽기 (Auto-Play):</label>
                 <select id="autoPlaySelect" class="large-select">
-                    <option value="true">켜짐 (번역 즉시 읽기)</option>
-                    <option value="false">꺼짐 (수동 버튼 작동)</option>
+                    <option value="true">켜짐 (번역 완료 시 자동으로 음성 재생)</option>
+                    <option value="false">꺼짐 (수동 [🔊 읽기] 버튼 사용)</option>
                 </select>
             </div>
         </div>
-        <button id="btnSaveSettings" class="btn-primary btn-large" style="width:100%;">저장 및 닫기</button>
+        <button id="btnSaveSettings" class="btn-primary" style="width:100%; padding:0.75rem; background:var(--primary); color:white; border:none; border-radius:8px; font-weight:700;">저장 및 닫기</button>
     </div>
 </div>
-
-<!-- 💾 6개국어 AI 오프라인 모델 관리 모달 -->
-<div id="modelsModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>💾 6개국어 오프라인 모델 관리</h3>
-            <span id="closeModels" class="close-btn">&times;</span>
-        </div>
-        <div class="modal-body">
-            <div class="ios-notice">
-                <b>🏠 집(Wi-Fi)에서 사전 다운로드 권장</b><br>
-                • 용량이 크므로 집이나 Wi-Fi 환경에서 필요한 언어를 미리 받으세요.<br>
-                • 외부에서 설치된 모델이 부족하거나 끊기면 <b>자동으로 Online 모드로 전환</b>되어 번역을 이어갑니다.
-            </div>
-
-            <!-- 6개국어 다운로드 카드 목록 -->
-            <div class="model-card">
-                <div>
-                    <div class="model-info-title">🇺🇸 영어 ↔ 🇰🇷 한국어 (en-ko)</div>
-                    <div class="model-info-detail">용량: ~135 MB | 상태: <span id="st-en-ko" style="color:red; font-weight:700;">미설치</span></div>
-                </div>
-                <button class="btn-download" onclick="downloadModel('en-ko')">다운로드</button>
-            </div>
-
-            <div class="model-card">
-                <div>
-                    <div class="model-info-title">🇯🇵 일본어 ↔ 🇰🇷 한국어 (ja-ko)</div>
-                    <div class="model-info-detail">용량: ~130 MB | 상태: <span id="st-ja-ko" style="color:red; font-weight:700;">미설치</span></div>
-                </div>
-                <button class="btn-download" onclick="downloadModel('ja-ko')">다운로드</button>
-            </div>
-
-            <div class="model-card">
-                <div>
-                    <div class="model-info-title">🇩🇪 독일어 ↔ 🇰🇷 한국어 (de-ko)</div>
-                    <div class="model-info-detail">용량: ~140 MB | 상태: <span id="st-de-ko" style="color:red; font-weight:700;">미설치</span></div>
-                </div>
-                <button class="btn-download" onclick="downloadModel('de-ko')">다운로드</button>
-            </div>
-
-            <div class="model-card">
-                <div>
-                    <div class="model-info-title">🇫🇷 프랑스어 ↔ 🇰🇷 한국어 (fr-ko)</div>
-                    <div class="model-info-detail">용량: ~140 MB | 상태: <span id="st-fr-ko" style="color:red; font-weight:700;">미설치</span></div>
-                </div>
-                <button class="btn-download" onclick="downloadModel('fr-ko')">다운로드</button>
-            </div>
-
-            <div class="model-card">
-                <div>
-                    <div class="model-info-title">🇪🇸 스페인어 ↔ 🇰🇷 한국어 (es-ko)</div>
-                    <div class="model-info-detail">용량: ~135 MB | 상태: <span id="st-es-ko" style="color:red; font-weight:700;">미설치</span></div>
-                </div>
-                <button class="btn-download" onclick="downloadModel('es-ko')">다운로드</button>
-            </div>
-        </div>
-        <button id="btnCloseModels" class="btn-secondary btn-large" style="width:100%;">닫기</button>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" async></script>
 
 <script>
-    // PWA Service Worker 등록
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('SW Registered:', reg.scope))
-                .catch(err => console.error('SW Failed:', err));
+            navigator.serviceWorker.register('./sw.js').catch(err => console.error(err));
         });
     }
 
-    let downloadedModels = {};
-    let mediaRecorder, audioChunks = [];
     const synth = window.speechSynthesis;
-
+    const chatHistory = document.getElementById('chatHistory');
     const inputText = document.getElementById('inputText');
-    const sentenceList = document.getElementById('sentenceList');
+    const partnerLangSelect = document.getElementById('partnerLangSelect');
     const networkNotice = document.getElementById('networkNotice');
-    const ocrStatus = document.getElementById('ocrStatus');
+    const liveTransBody = document.getElementById('liveTransBody');
 
-    // 네트워크 상태에 따른 자동 모드 전환 및 알림
+    const langCodeMap = {
+        'ko': 'ko-KR',
+        'en': 'en-US',
+        'de': 'de-DE',
+        'fr': 'fr-FR',
+        'es': 'es-ES',
+        'ja': 'ja-JP'
+    };
+
+    // 다국어 UI 텍스트 사전
+    const i18nDict = {
+        'ko': {
+            uiTitle: '🗣️ 6개국어 대화 번역기',
+            uiBtnFast: '고속 번역',
+            uiBtnSettings: '설정',
+            uiPartnerLangLabel: '🤝 상대방 언어 선택:',
+            uiNoticeHeader: '👋 안내',
+            uiNoticeText: '상대방 언어를 선택한 후, 아래 입력창을 이용하거나 음성으로 대화를 주고받아 보세요.',
+            uiBtnSpeakMe: '🇰🇷 내가 말하기 (전송)',
+            uiBtnSpeakPartner: '🌐 상대방이 말하기',
+            uiBtnReset: '🗑️ 대화 내용 초기화',
+            uiLiveTransTitle: '🌐 실시간 다국어 번역 창 (미리보기)',
+            uiBtnCopy: '결과 복사',
+            uiBtnListen: '듣기',
+            uiRateLabel: '음성 읽기 속도:',
+            uiFastModalTitle: '⚡ 긴 문장 고속 번역',
+            uiFastDirLabel: '🎯 번역 방향:',
+            uiBtnExecFast: '🚀 고속 번역 실행',
+            uiFastResultLabel: '번역 결과:',
+            uiSettingsTitle: '⚙️ 환경 설정',
+            uiChatHeightLabel: '📏 대화창 크기 (줄 수 설정):',
+            uiAutoPlayLabel: '🔊 자동 읽기 (Auto-Play):',
+            phInput: '전송할 대화 내용을 입력하거나 아래 음성 버튼을 누르세요...'
+        },
+        'en': {
+            uiTitle: '🗣️ 6-Lang Conversation Translator',
+            uiBtnFast: 'Fast Trans',
+            uiBtnSettings: 'Settings',
+            uiPartnerLangLabel: '🤝 Select Partner Language:',
+            uiNoticeHeader: '👋 Notice',
+            uiNoticeText: 'Select partner language, then type or use speech to start conversing.',
+            uiBtnSpeakMe: '🇰🇷 Speak (Send)',
+            uiBtnSpeakPartner: '🌐 Partner Speak',
+            uiBtnReset: '🗑️ Clear Chat History',
+            uiLiveTransTitle: '🌐 Live Multilingual Translation Box',
+            uiBtnCopy: 'Copy Text',
+            uiBtnListen: 'Listen',
+            uiRateLabel: 'TTS Speed:',
+            uiFastModalTitle: '⚡ High-Speed Text Translation',
+            uiFastDirLabel: '🎯 Direction:',
+            uiBtnExecFast: '🚀 Translate Now',
+            uiFastResultLabel: 'Result:',
+            uiSettingsTitle: '⚙️ Settings',
+            uiChatHeightLabel: '📏 Chat Window Size (Lines):',
+            uiAutoPlayLabel: '🔊 Auto-Play Speech:',
+            phInput: 'Type message or tap speech button below...'
+        },
+        'ja': {
+            uiTitle: '🗣️ 6개국어 リアルタイム会話翻訳機',
+            uiBtnFast: '高速翻訳',
+            uiBtnSettings: '設定',
+            uiPartnerLangLabel: '🤝 相手の言語を選択:',
+            uiNoticeHeader: '👋 案内',
+            uiNoticeText: '相手の言語を選択した後、テキスト入力または音声で会話を開始してください。',
+            uiBtnSpeakMe: '🇰🇷 自分が話す (送信)',
+            uiBtnSpeakPartner: '🌐 相手が話す',
+            uiBtnReset: '🗑️ 会話履歴を clear',
+            uiLiveTransTitle: '🌐 リアルタイム多言語翻訳ウィンドウ',
+            uiBtnCopy: 'コピー',
+            uiBtnListen: '音声再生',
+            uiRateLabel: '読み上げ速度:',
+            uiFastModalTitle: '⚡ 長文高速翻訳',
+            uiFastDirLabel: '🎯 翻訳方向:',
+            uiBtnExecFast: '🚀 翻訳実行',
+            uiFastResultLabel: '翻訳結果:',
+            uiSettingsTitle: '⚙️ 環境設定',
+            uiChatHeightLabel: '📏 会話ウィンドウの高さ:',
+            uiAutoPlayLabel: '🔊 自動読み上げ:',
+            phInput: 'メッセージを入力するか、下の音声ボタンを押してください...'
+        }
+    };
+
+    function changeUILanguage(lang) {
+        const dict = i18nDict[lang] || i18nDict['ko'];
+        for (let key in dict) {
+            const el = document.getElementById(key);
+            if (el) {
+                if (key === 'phInput') {
+                    inputText.placeholder = dict[key];
+                } else {
+                    el.textContent = dict[key];
+                }
+            }
+        }
+    }
+
+    function applyChatHeight(height) {
+        chatHistory.style.height = height;
+    }
+
     function updateOnlineStatus() {
         if (navigator.onLine) {
             networkNotice.style.background = '#eff6ff';
             networkNotice.style.borderColor = '#bfdbfe';
             networkNotice.style.color = '#1e40af';
-            networkNotice.innerHTML = '🌐 <b>Online 모드 연결됨:</b> 오프라인 모델이 부족해도 온라인 Google API로 자동 전환됩니다.';
+            networkNotice.innerHTML = '🌐 <b>Online 모드 연결됨</b> (실시간 구글 고속 번역 엔진 작동 중)';
         } else {
             networkNotice.style.background = '#fef2f2';
             networkNotice.style.borderColor = '#fca5a5';
             networkNotice.style.color = '#991b1b';
-            networkNotice.innerHTML = '📡 <b>Offline 모드:</b> 인터넷 연결 끊김. 집에서 설치한 오프라인 AI 모델로 번역을 수행합니다.';
+            networkNotice.innerHTML = '📡 <b>Offline 모드</b> (네트워크 연결을 확인해주세요)';
         }
     }
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     updateOnlineStatus();
 
-    function applyPrompt(text) {
-        inputText.value = text;
-        renderTranslation();
-    }
-
-    // 모달 관리
+    // 모달 제어
     const settingsModal = document.getElementById('settingsModal');
-    const modelsModal = document.getElementById('modelsModal');
-
+    const fastTransModal = document.getElementById('fastTransModal');
+    
     document.getElementById('btnOpenSettings').onclick = () => settingsModal.style.display = 'flex';
     document.getElementById('closeSettings').onclick = () => settingsModal.style.display = 'none';
-    
-    document.getElementById('btnOpenModels').onclick = () => modelsModal.style.display = 'flex';
-    document.getElementById('closeModels').onclick = () => modelsModal.style.display = 'none';
-    document.getElementById('btnCloseModels').onclick = () => modelsModal.style.display = 'none';
+    document.getElementById('btnSaveSettings').onclick = () => settingsModal.style.display = 'none';
 
-    document.getElementById('btnSaveSettings').onclick = () => {
-        settingsModal.style.display = 'none';
-        renderTranslation();
-    };
+    document.getElementById('btnOpenFastTrans').onclick = () => fastTransModal.style.display = 'flex';
+    document.getElementById('closeFastTrans').onclick = () => fastTransModal.style.display = 'none';
 
-    // 오프라인 모델 다운로드 함수
-    function downloadModel(pair) {
-        const targetSpan = document.getElementById(`st-${pair}`);
-        if (!targetSpan) return;
-        targetSpan.textContent = '다운로드 중...';
-        targetSpan.style.color = 'orange';
-
-        setTimeout(() => {
-            downloadedModels[pair] = true;
-            targetSpan.textContent = '설치 완료';
-            targetSpan.style.color = 'green';
-            alert(`[${pair}] 오프라인 모델 다운로드가 완료되어 인터넷 없이 동작합니다.`);
-            renderTranslation();
-        }, 1200);
-    }
-
-    // TTS 음성 읽기
-    function speakText(customText = null, lang = 'en-US') {
-        if (!synth) { alert('이 브라우저는 음성 출력을 지원하지 않습니다.'); return; }
+    function speakText(text, langCode = 'ko-KR') {
+        if (!synth) return;
         synth.cancel();
-
-        const textToSpeak = customText || inputText.value.trim();
-        if (!textToSpeak) return;
-
-        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = parseFloat(document.getElementById('rate').value);
-        utterance.lang = lang;
+        utterance.lang = langCode;
+
+        // 한국어 음성이 설치되지 않은 외국인 환경을 위한 예비 고품질 fallback 음성 매핑
+        const voices = synth.getVoices();
+        const targetVoice = voices.find(v => v.lang.startsWith(langCode.substring(0,2)));
+        if (targetVoice) {
+            utterance.voice = targetVoice;
+        }
+
         synth.speak(utterance);
     }
 
-    function pauseSpeech() { if (synth) synth.pause(); }
-    function stopSpeech() { if (synth) synth.cancel(); }
-
-    // STT 음성 인식
-    function startSTT(langCode) {
-        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            alert('이 브라우저/기기는 음성 인식을 지원하지 않습니다.');
-            return;
-        }
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        recognition.lang = langCode;
-
-        ocrStatus.textContent = `🎙️ (${langCode}) 음성 듣는 중...`;
-
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            inputText.value = (inputText.value ? inputText.value + " " : "") + transcript;
-            ocrStatus.textContent = "✅ 음성 입력 완료!";
-            renderTranslation();
-        };
-
-        recognition.onerror = () => { ocrStatus.textContent = "❌ 음성 인식 실패"; };
-        recognition.start();
-    }
-
-    // OCR 카메라 글자 분석
-    function processOCR(input) {
-        if (!input.files || !input.files[0]) return;
-        ocrStatus.textContent = "⏳ 사진 글자를 분석 중...";
-
-        Tesseract.recognize(input.files[0], 'eng+kor')
-            .then(({ data: { text } }) => {
-                inputText.value = text.trim();
-                ocrStatus.textContent = "✅ 사진 글자 분석 완료!";
-                renderTranslation();
-            })
-            .catch(() => { ocrStatus.textContent = "❌ 사진 글자 읽기 실패"; });
-    }
-
-    // 녹음 기능
-    async function startRecording() {
+    async function translateText(text, sourceLang, targetLang) {
+        if (!text.trim()) return '';
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-            audioChunks = [];
-
-            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-            mediaRecorder.onstop = () => {
-                const blob = new Blob(audioChunks, { type: 'audio/mp3' });
-                const audio = document.getElementById('audioPlayback');
-                audio.src = URL.createObjectURL(blob);
-                audio.style.display = 'block';
-            };
-
-            mediaRecorder.start();
-            document.getElementById('btnRecStart').disabled = true;
-            document.getElementById('btnRecStop').disabled = false;
-        } catch (err) { alert("마이크 접근 권한이 필요합니다."); }
-    }
-
-    function stopRecording() {
-        if (mediaRecorder) {
-            mediaRecorder.stop();
-            document.getElementById('btnRecStart').disabled = false;
-            document.getElementById('btnRecStop').disabled = true;
+            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`);
+            const data = await res.json();
+            return data[0].map(item => item[0]).join('');
+        } catch (err) {
+            console.error(err);
+            return '번역 중 오류가 발생했습니다.';
         }
     }
 
-    // 번역 처리 로직 (온라인 API + 오프라인 AI 유연 대응)
-    async function translateText(text, targetLang) {
-        if (!text.trim()) return "";
-
-        const isKorean = /[가-힣]/.test(text);
-        const pairKey = isKorean ? `${targetLang}-ko` : `en-ko`;
-
-        // 온라인 상태인 경우 Google API로 즉시 번역
-        if (navigator.onLine) {
-            try {
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                return data[0][0][0];
-            } catch (e) {
-                return "[Online 연결 오퍼레이션 실패]";
+    let liveTimer = null;
+    function handleLiveTranslation() {
+        clearTimeout(liveTimer);
+        liveTimer = setTimeout(async () => {
+            const text = inputText.value.trim();
+            if (!text) {
+                liveTransBody.textContent = '입력한 내용이 실시간으로 다국어로 번역되어 여기에 나타납니다.';
+                return;
             }
-        } else {
-            // 오프라인 상태일 때
-            if (downloadedModels[pairKey]) {
-                return `(Offline AI 번역) ${text}`;
-            } else {
-                return `[⚠️ 오프라인 모델 미설치: 집(Wi-Fi)에서 상단 '💾 AI 모델'을 다운로드해주세요]`;
-            }
+            const targetLang = document.getElementById('liveTargetLang').value;
+            liveTransBody.textContent = '⚡ 번역 중...';
+            const res = await translateText(text, 'auto', targetLang);
+            liveTransBody.textContent = res;
+        }, 300);
+    }
+
+    function copyLiveTranslation() {
+        const text = liveTransBody.textContent;
+        if (text && text !== '입력한 내용이 실시간으로 다국어로 번역되어 여기에 나타납니다.') {
+            navigator.clipboard.writeText(text);
+            alert('복사되었습니다.');
         }
     }
 
-    async function renderTranslation() {
+    function speakLiveTranslation() {
+        const text = liveTransBody.textContent;
+        const targetLang = document.getElementById('liveTargetLang').value;
+        if (text && text !== '입력한 내용이 실시간으로 다국어로 번역되어 여기에 나타납니다.') {
+            speakText(text, langCodeMap[targetLang] || 'en-US');
+        }
+    }
+
+    async function handleSendMessage(sender) {
         const text = inputText.value.trim();
-        if(!text) {
-            sentenceList.innerHTML = '';
-            return;
+        if (!text) return;
+
+        const partnerLang = partnerLangSelect.value;
+        let sourceLang = 'ko';
+        let targetLang = partnerLang;
+        let bubbleClass = 'chat-me';
+        let senderTitle = '🇰🇷 나';
+        let ttsLang = langCodeMap[partnerLang];
+
+        if (sender === 'partner') {
+            sourceLang = partnerLang;
+            targetLang = 'ko';
+            bubbleClass = 'chat-partner';
+            senderTitle = `🌐 상대방 (${partnerLang.toUpperCase()})`;
+            ttsLang = 'ko-KR';
         }
 
-        const targetLang = document.getElementById('targetLangSelect').value;
-        const result = await translateText(text, targetLang);
+        const translated = await translateText(text, sourceLang, targetLang);
+        
+        appendChatBubble(senderTitle, text, translated, bubbleClass, ttsLang);
+        inputText.value = '';
+        liveTransBody.textContent = '입력한 내용이 실시간으로 다국어로 번역되어 여기에 나타납니다.';
 
-        sentenceList.innerHTML = `
-            <div class="sentence-card">
-                <div class="sentence-text">${text}</div>
-                <div class="translation-block">
-                    <span>💬 <b>번역 (${targetLang.toUpperCase()}):</b> ${result}</span>
-                    <button class="btn-icon" onclick="speakText('${result.replace(/'/g, "\\'")}', '${targetLang}')">🔊 발음 듣기</button>
-                </div>
-            </div>
+        if (document.getElementById('autoPlaySelect').value === 'true') {
+            speakText(translated, ttsLang);
+        }
+    }
+
+    function appendChatBubble(sender, original, translated, className, ttsLang) {
+        const bubble = document.createElement('div');
+        bubble.className = `chat-bubble ${className}`;
+
+        const content = `
+            <div class="chat-meta">${sender}</div>
+            <div>${original}</div>
+            <div class="chat-trans">💬 <b>번역:</b> ${translated}</div>
+            <button class="btn-tts" onclick="speakText('${translated.replace(/'/g, "\\'")}', '${ttsLang}')">🔊 읽기</button>
         `;
 
-        if (document.getElementById('autoPlaySelect').value === 'true' && result && !result.includes('[⚠️')) {
-            speakText(result, targetLang);
-        }
+        bubble.innerHTML = content;
+        chatHistory.appendChild(bubble);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
-    inputText.addEventListener('input', renderTranslation);
-    document.getElementById('btnClear').onclick = () => { inputText.value = ''; renderTranslation(); stopSpeech(); };
+    async function execFastTranslation() {
+        const text = document.getElementById('fastInputText').value;
+        const resultBox = document.getElementById('fastResultBox');
+        const pair = document.getElementById('fastLangPair').value.split('|');
+        const sourceLang = pair[0];
+        const targetLang = pair[1];
+
+        if (!text.trim()) {
+            resultBox.textContent = '번역할 내용을 입력해주세요.';
+            return;
+        }
+
+        resultBox.textContent = '⚡ 고속 번역 처리 중...';
+        const translated = await translateText(text, sourceLang, targetLang);
+        resultBox.textContent = translated;
+    }
+
+    function resetChatNotice() {
+        const currentLang = document.getElementById('uiLangSelect').value;
+        const dict = i18nDict[currentLang] || i18nDict['ko'];
+        chatHistory.innerHTML = `
+            <div class="chat-bubble chat-partner">
+                <div class="chat-meta">${dict.uiNoticeHeader}</div>
+                ${dict.uiNoticeText}
+            </div>
+        `;
+    }
+
+    function clearChat() {
+        const currentLang = document.getElementById('uiLangSelect').value;
+        const dict = i18nDict[currentLang] || i18nDict['ko'];
+        chatHistory.innerHTML = `
+            <div class="chat-bubble chat-partner">
+                <div class="chat-meta">${dict.uiNoticeHeader}</div>
+                ${dict.uiNoticeText}
+            </div>
+        `;
+    }
 </script>
 </body>
 </html>
