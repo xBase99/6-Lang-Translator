@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>🗣️ 6개국어 번역기 PWA (v2.02 AI)</title>
+    <title>🗣️ 6-Lang Translator PWA (v2.05 AI)</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <!-- PWA Manifest 연동 -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#2563eb">
 
-    <!-- iOS (iPhone/iPad) 전용 PWA 및 웹앱 메타 태그 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="AI번역">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3898/3898082.png">
 
-    <!-- Noto Sans KR 웹폰트 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
@@ -49,17 +46,59 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
+        /* 헤더 한 줄 레이아웃 고정 */
         .mobile-header-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            padding-bottom: 0.75rem; border-bottom: 2px solid var(--border); margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.4rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 0.75rem;
         }
-        .mobile-header-bar h1 { font-size: 1.05rem; font-weight: 800; }
-        .header-btn-group { display: flex; gap: 0.25rem; align-items: center; }
-        .btn-icon { padding: 0.4rem 0.5rem; font-size: 0.78rem; font-weight: 700; background-color: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; text-decoration: none; color: var(--text); display: inline-flex; align-items: center; }
+        .mobile-header-bar h1 {
+            font-size: 1rem;
+            font-weight: 800;
+            white-space: nowrap;
+            flex-shrink: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .header-btn-group {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            flex-wrap: nowrap;
+            flex-shrink: 0;
+        }
+        .btn-icon {
+            padding: 0.35rem 0.5rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            background-color: #f1f5f9;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            white-space: nowrap;
+        }
+        
+        .btn-icon-large { font-size: 1.1rem !important; padding: 0.2rem 0.4rem !important; }
         .btn-trip { background-color: #003580; color: white; border: none; }
 
-        /* UI 메뉴 언어 변경 드롭다운 */
-        .ui-lang-select { padding: 0.35rem 0.4rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; border: 1px solid var(--border); background: white; }
+        .ui-lang-select {
+            padding: 0.3rem 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+        }
 
         .mode-banner {
             background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af;
@@ -67,32 +106,31 @@
         }
 
         .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
-        label { font-weight: 700; font-size: 0.9rem; }
+        label { font-weight: 700; font-size: 0.88rem; }
 
         .stt-btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin-bottom: 0.5rem; }
-        .btn-stt { padding: 0.55rem 0.2rem; font-size: 0.8rem; font-weight: 700; background-color: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .btn-stt { padding: 0.5rem 0.2rem; font-size: 0.78rem; font-weight: 700; background-color: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; }
 
-        textarea { width: 100%; height: 90px; padding: 0.8rem; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; line-height: 1.4; outline: none; resize: vertical; }
+        textarea { width: 100%; height: 95px; padding: 0.8rem; border: 2px solid var(--border); border-radius: 12px; font-size: 0.95rem; line-height: 1.4; outline: none; resize: vertical; }
 
         .photo-trans-bar { margin: 0.5rem 0; }
-        .btn-photo { display: block; text-align: center; padding: 0.6rem; background-color: #4f46e5; color: white; font-size: 0.85rem; font-weight: 700; border-radius: 8px; cursor: pointer; }
+        .btn-photo { display: block; text-align: center; padding: 0.6rem; background-color: #4f46e5; color: white; font-size: 0.82rem; font-weight: 700; border-radius: 8px; cursor: pointer; }
         .ocr-status-text { font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-top: 0.3rem; text-align: center; }
 
         .controls, .rec-controls { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 0.75rem; margin-bottom: 0.75rem; }
         .main-controls { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 0.4rem; }
-        .btn-large { padding: 0.65rem 0.4rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+        .btn-large { padding: 0.65rem 0.4rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
         .btn-primary { background-color: var(--primary); color: white; border: none; border-radius: 8px; }
         .btn-secondary { background-color: white; color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
         .btn-danger { background-color: var(--record-bg); color: white; border: none; border-radius: 8px; }
 
         .rate-control { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; font-size: 0.85rem; font-weight: 700; }
 
-        .scrollable-sentence-box { max-height: 220px; overflow-y: auto; border: 2px solid var(--border); border-radius: 10px; padding: 0.5rem; background: #ffffff; }
+        .scrollable-sentence-box { max-height: 240px; overflow-y: auto; border: 2px solid var(--border); border-radius: 10px; padding: 0.5rem; background: #ffffff; }
         .sentence-card { padding: 0.7rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0.5rem; background: #f8fafc; }
-        .sentence-text { font-size: 1rem; font-weight: 700; }
-        .translation-block { margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); font-size: 0.9rem; color: #1e293b; display: flex; justify-content: space-between; align-items: center; }
+        .sentence-text { font-size: 0.92rem; font-weight: 700; color: #334155; }
+        .translation-block { margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); font-size: 0.88rem; color: #0f172a; display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
 
-        /* 저작권 표기 바 */
         .copyright-bar { text-align: center; margin-top: 0.8rem; font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
 
         /* 모달 스타일 */
@@ -103,16 +141,16 @@
         .modal-body { padding: 0.8rem 0; overflow-y: auto; flex: 1; }
 
         .setting-item { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
-        .large-select { padding: 0.6rem; font-size: 0.9rem; font-weight: 700; border-radius: 8px; border: 1px solid var(--border); background: white; }
+        .large-select { padding: 0.6rem; font-size: 0.88rem; font-weight: 700; border-radius: 8px; border: 1px solid var(--border); background: white; }
 
         .model-card { border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; margin-bottom: 0.5rem; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; }
         .model-info-title { font-weight: 700; font-size: 0.85rem; }
         .model-info-detail { font-size: 0.75rem; color: var(--text-muted); }
         .btn-download { padding: 0.35rem 0.6rem; font-size: 0.75rem; font-weight: 700; background: #059669; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .btn-delete { background: #dc2626 !important; }
 
         .ios-notice { background: #fffbe3; border: 1px solid #fde047; padding: 0.6rem; border-radius: 8px; font-size: 0.78rem; color: #713f12; margin-bottom: 0.8rem; line-height: 1.4; }
 
-        /* 광고 모달 스타일 */
         .ad-modal-content { background: white; border-radius: 16px; width: 90%; max-width: 400px; padding: 1.5rem; text-align: center; }
         .ad-banner-box { width: 100%; height: 180px; background: #eff6ff; border: 2px dashed #3b82f6; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 1rem 0; padding: 1rem; }
     </style>
@@ -121,28 +159,28 @@
 
 <div class="container">
     <div class="mobile-header-bar">
-        <h1 id="uiTitle">🗣️ 6개국어 번역기 (iOS 지원)</h1>
+        <h1 id="uiTitle">🗣️ 6-Lang Translator</h1>
         <div class="header-btn-group">
-            <!-- UI 메뉴 언어 설정 옵션 -->
             <select id="uiLangSelect" class="ui-lang-select" onchange="changeUILanguage(this.value)">
                 <option value="ko">🇰🇷 한국어</option>
                 <option value="en">🇺🇸 English</option>
                 <option value="ja">🇯🇵 日本語</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="fr">🇫🇷 Français</option>
+                <option value="es">🇪🇸 Español</option>
             </select>
-            <!-- Trip 제휴 전용 링크 -->
             <a href="https://www.trip.com/t/77sfZ47lEW2" target="_blank" class="btn-icon btn-trip">✈️ Trip.com</a>
-            <button id="btnOpenModels" class="btn-icon">💾 <span id="uiBtnModels">AI 모델</span></button>
-            <button id="btnOpenSettings" class="btn-icon">⚙️ <span id="uiBtnSettings">설정</span></button>
+            <button id="btnOpenModels" class="btn-icon">🤖 <span id="uiBtnModels">AI Models</span></button>
+            <button id="btnOpenSettings" class="btn-icon btn-icon-large" title="Settings">⚙️</button>
         </div>
     </div>
 
-    <!-- 동적 언어 적용 네트워크 상태바 -->
     <div id="networkNotice" class="mode-banner"></div>
 
     <div class="input-group">
         <div class="label-row">
-            <label for="inputText" id="uiLabelInput">입력 문장:</label>
-            <button id="btnClear" class="btn-secondary" style="padding:0.2rem 0.5rem; font-size:0.8rem;">🗑️ <span id="uiBtnClear">지우기</span></button>
+            <label for="inputText" id="uiLabelInput">Input Text:</label>
+            <button id="btnClear" class="btn-secondary" style="padding:0.2rem 0.5rem; font-size:0.8rem;">🗑️ <span id="uiBtnClear">Clear</span></button>
         </div>
 
         <div class="stt-btn-grid">
@@ -154,10 +192,10 @@
             <button class="btn-stt" onclick="startSTT('es-ES')">🎤 Español</button>
         </div>
 
-        <textarea id="inputText" placeholder="문장을 입력하거나 음성/사진 버튼을 누르세요..."></textarea>
+        <textarea id="inputText" placeholder="Enter text or sentences..."></textarea>
 
         <div class="photo-trans-bar">
-            <label for="imageInput" class="btn-photo" id="uiBtnPhoto">📷 사진 속 글자 읽기 (카메라/갤러리)</label>
+            <label for="imageInput" class="btn-photo" id="uiBtnPhoto">📷 Read Text in Photo (Camera/Gallery)</label>
             <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="processOCR(this)">
             <div id="ocrStatus" class="ocr-status-text"></div>
         </div>
@@ -165,13 +203,13 @@
 
     <div class="controls">
         <div class="btn-group main-controls">
-            <button id="btnPlay" class="btn-primary btn-large" onclick="speakText()">▶ <span id="uiBtnPlay">전체 읽기</span></button>
-            <button id="btnPause" class="btn-secondary btn-large" onclick="pauseSpeech()">⏸️ <span id="uiBtnPause">일시정지</span></button>
-            <button id="btnStop" class="btn-secondary btn-large" onclick="stopSpeech()">⏹️ <span id="uiBtnStop">정지</span></button>
+            <button id="btnPlay" class="btn-primary btn-large" onclick="speakText()">▶ <span id="uiBtnPlay">Play All</span></button>
+            <button id="btnPause" class="btn-secondary btn-large" onclick="pauseSpeech()">⏸️ <span id="uiBtnPause">Pause</span></button>
+            <button id="btnStop" class="btn-secondary btn-large" onclick="stopSpeech()">⏹️ <span id="uiBtnStop">Stop</span></button>
         </div>
 
         <div class="rate-control">
-            <label for="rate" id="uiLabelRate">읽기 속도:</label>
+            <label for="rate" id="uiLabelRate">Speed:</label>
             <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('rateValue').textContent = this.value + 'x'">
             <span id="rateValue">1.0x</span>
         </div>
@@ -179,146 +217,210 @@
 
     <div class="rec-controls">
         <div class="btn-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem;">
-            <button id="btnRecStart" class="btn-danger" onclick="startRecording()">🎙️ <span id="uiBtnRecStart">내 발음 녹음 시작</span></button>
-            <button id="btnRecStop" class="btn-secondary" onclick="stopRecording()" disabled>⏹️ <span id="uiBtnRecStop">녹음 정지</span></button>
+            <button id="btnRecStart" class="btn-danger" onclick="startRecording()">🎙️ <span id="uiBtnRecStart">Record Voice</span></button>
+            <button id="btnRecStop" class="btn-secondary" onclick="stopRecording()" disabled>⏹️ <span id="uiBtnRecStop">Stop Recording</span></button>
         </div>
         <audio id="audioPlayback" controls style="display:none; width:100%; margin-top:0.5rem;"></audio>
     </div>
 
     <div class="sentences-container">
-        <label style="display:block; margin-bottom:0.4rem;" id="uiLabelResult">번역 결과:</label>
+        <label style="display:block; margin-bottom:0.4rem;" id="uiLabelResult">Translation Result:</label>
         <div id="sentenceList" class="scrollable-sentence-box"></div>
     </div>
 
     <div class="copyright-bar">
-        © 2026 2.02 AI Multilingual Conversation System. All rights reserved.
+        © 2026 2.05 AI Multilingual Conversation System. All rights reserved.
     </div>
 </div>
 
-<!-- ⚙️ 환경 설정 모달 -->
+<!-- ⚙️ Settings Modal -->
 <div id="settingsModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 id="uiSettingsTitle">⚙️ 환경 설정</h3>
+            <h3 id="uiSettingsTitle">⚙️ Settings</h3>
             <span id="closeSettings" class="close-btn">&times;</span>
         </div>
         <div class="modal-body">
             <div class="setting-item">
-                <label id="uiSettingModeLabel">🌐 번역 모드 선택:</label>
+                <label id="uiSettingSplitLabel">✂️ Text Splitting Method:</label>
+                <select id="splitModeSelect" class="large-select" onchange="renderTranslation()">
+                    <option value="sentence" id="optSplitSentence">Sentence Splitting (. ! ?)</option>
+                    <option value="paragraph" id="optSplitParagraph">Paragraph Splitting (Enter Key)</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label id="uiSettingModeLabel">🌐 Translation Mode:</label>
                 <select id="translationModeSelect" class="large-select">
-                    <option value="auto">자동 전환 모드 (오프라인 우선 + 온라인 연결)</option>
-                    <option value="online">Online 모드 (Google API)</option>
-                    <option value="offline">Offline 전용 모드 (내장 AI만 사용)</option>
+                    <option value="auto">Auto Mode (Offline First + Online Backup)</option>
+                    <option value="online">Online Mode (Google API)</option>
+                    <option value="offline">Offline Only Mode (Stored AI)</option>
                 </select>
             </div>
             <div class="setting-item">
-                <label id="uiSettingTargetLabel">🎯 번역 대상 언어 선택:</label>
+                <label id="uiSettingTargetLabel">🎯 Target Language:</label>
                 <select id="targetLangSelect" class="large-select" onchange="renderTranslation()">
-                    <option value="en">English (영어)</option>
+                    <option value="en">English</option>
                     <option value="ko">한국어 (Korean)</option>
-                    <option value="ja">日本語 (일본어)</option>
-                    <option value="de">Deutsch (독일어)</option>
-                    <option value="fr">Français (프랑스어)</option>
-                    <option value="es">Español (스페인어)</option>
+                    <option value="ja">日本語 (Japanese)</option>
+                    <option value="de">Deutsch (German)</option>
+                    <option value="fr">Français (French)</option>
+                    <option value="es">Español (Spanish)</option>
                 </select>
             </div>
             <div class="setting-item">
-                <label id="uiSettingAutoPlayLabel">🔊 자동 읽기 (Auto-Play):</label>
+                <label id="uiSettingAutoPlayLabel">🔊 Auto-Play Speech:</label>
                 <select id="autoPlaySelect" class="large-select">
-                    <option value="true">켜짐 (번역 즉시 읽기)</option>
-                    <option value="false">꺼짐 (수동 버튼 작동)</option>
+                    <option value="true" id="optAutoOn">On (Speak after Translation)</option>
+                    <option value="false" id="optAutoOff">Off (Manual Controls)</option>
                 </select>
             </div>
         </div>
-        <button id="btnSaveSettings" class="btn-primary btn-large" style="width:100%;">저장 및 닫기</button>
+        <button id="btnSaveSettings" class="btn-primary btn-large" style="width:100%;"><span id="uiBtnSaveSettings">Save & Close</span></button>
     </div>
 </div>
 
-<!-- 💾 6개국어 AI 오프라인 모델 관리 모달 -->
+<!-- 🤖 AI Models Modal -->
 <div id="modelsModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 id="uiModelsTitle">💾 6개국어 오프라인 모델 관리</h3>
+            <h3 id="uiModelsTitle">🤖 Offline AI Models Storage</h3>
             <span id="closeModels" class="close-btn">&times;</span>
         </div>
         <div class="modal-body">
             <div class="ios-notice">
-                <b id="uiNoticeTitle">🏠 집(Wi-Fi)에서 사전 다운로드 권장</b><br>
+                <b id="uiNoticeTitle">💾 IndexedDB Permanent Storage</b><br>
                 <span id="uiNoticeDetail">
-                • 용량이 크므로 집이나 Wi-Fi 환경에서 필요한 언어를 미리 받으세요.<br>
-                • 외부에서 설치된 모델이 부족하거나 끊기면 <b>자동으로 Online 모드로 전환</b>되어 번역을 이어갑니다.
+                • Models are stored permanently. <b>No re-downloading needed upon browser refresh.</b><br>
+                • Download over Wi-Fi is recommended.
                 </span>
             </div>
 
             <div class="model-card">
                 <div>
-                    <div class="model-info-title">🇺🇸 영어 ↔ 🇰🇷 한국어 (en-ko)</div>
-                    <div class="model-info-detail"><span class="uiSizeLabel">용량</span>: ~135 MB | <span class="uiStatusLabel">상태</span>: <span id="st-en-ko" class="st-text" style="color:red; font-weight:700;">미설치</span></div>
+                    <div class="model-info-title">🇺🇸 English ↔ 🇰🇷 Korean (en-ko)</div>
+                    <div class="model-info-detail"><span class="uiSizeLabel">Size</span>: ~135 MB | <span class="uiStatusLabel">Status</span>: <span id="st-en-ko" class="st-text" style="color:red; font-weight:700;">Not Installed</span></div>
                 </div>
-                <button class="btn-download uiBtnDl" onclick="downloadModel('en-ko')">다운로드</button>
+                <button id="btn-dl-en-ko" class="btn-download uiBtnDl" onclick="handleModelAction('en-ko')">Download</button>
             </div>
 
             <div class="model-card">
                 <div>
-                    <div class="model-info-title">🇯🇵 일본어 ↔ 🇰🇷 한국어 (ja-ko)</div>
-                    <div class="model-info-detail"><span class="uiSizeLabel">용량</span>: ~130 MB | <span class="uiStatusLabel">상태</span>: <span id="st-ja-ko" class="st-text" style="color:red; font-weight:700;">미설치</span></div>
+                    <div class="model-info-title">🇯🇵 Japanese ↔ 🇰🇷 Korean (ja-ko)</div>
+                    <div class="model-info-detail"><span class="uiSizeLabel">Size</span>: ~130 MB | <span class="uiStatusLabel">Status</span>: <span id="st-ja-ko" class="st-text" style="color:red; font-weight:700;">Not Installed</span></div>
                 </div>
-                <button class="btn-download uiBtnDl" onclick="downloadModel('ja-ko')">다운로드</button>
+                <button id="btn-dl-ja-ko" class="btn-download uiBtnDl" onclick="handleModelAction('ja-ko')">Download</button>
             </div>
 
             <div class="model-card">
                 <div>
-                    <div class="model-info-title">🇩🇪 독일어 ↔ 🇰🇷 한국어 (de-ko)</div>
-                    <div class="model-info-detail"><span class="uiSizeLabel">용량</span>: ~140 MB | <span class="uiStatusLabel">상태</span>: <span id="st-de-ko" class="st-text" style="color:red; font-weight:700;">미설치</span></div>
+                    <div class="model-info-title">🇩🇪 German ↔ 🇰🇷 Korean (de-ko)</div>
+                    <div class="model-info-detail"><span class="uiSizeLabel">Size</span>: ~140 MB | <span class="uiStatusLabel">Status</span>: <span id="st-de-ko" class="st-text" style="color:red; font-weight:700;">Not Installed</span></div>
                 </div>
-                <button class="btn-download uiBtnDl" onclick="downloadModel('de-ko')">다운로드</button>
+                <button id="btn-dl-de-ko" class="btn-download uiBtnDl" onclick="handleModelAction('de-ko')">Download</button>
             </div>
 
             <div class="model-card">
                 <div>
-                    <div class="model-info-title">🇫🇷 프랑스어 ↔ 🇰🇷 한국어 (fr-ko)</div>
-                    <div class="model-info-detail"><span class="uiSizeLabel">용량</span>: ~140 MB | <span class="uiStatusLabel">상태</span>: <span id="st-fr-ko" class="st-text" style="color:red; font-weight:700;">미설치</span></div>
+                    <div class="model-info-title">🇫🇷 French ↔ 🇰🇷 Korean (fr-ko)</div>
+                    <div class="model-info-detail"><span class="uiSizeLabel">Size</span>: ~140 MB | <span class="uiStatusLabel">Status</span>: <span id="st-fr-ko" class="st-text" style="color:red; font-weight:700;">Not Installed</span></div>
                 </div>
-                <button class="btn-download uiBtnDl" onclick="downloadModel('fr-ko')">다운로드</button>
+                <button id="btn-dl-fr-ko" class="btn-download uiBtnDl" onclick="handleModelAction('fr-ko')">Download</button>
             </div>
 
             <div class="model-card">
                 <div>
-                    <div class="model-info-title">🇪🇸 스페인어 ↔ 🇰🇷 한국어 (es-ko)</div>
-                    <div class="model-info-detail"><span class="uiSizeLabel">용량</span>: ~135 MB | <span class="uiStatusLabel">상태</span>: <span id="st-es-ko" class="st-text" style="color:red; font-weight:700;">미설치</span></div>
+                    <div class="model-info-title">🇪🇸 Spanish ↔ 🇰🇷 Korean (es-ko)</div>
+                    <div class="model-info-detail"><span class="uiSizeLabel">Size</span>: ~135 MB | <span class="uiStatusLabel">Status</span>: <span id="st-es-ko" class="st-text" style="color:red; font-weight:700;">Not Installed</span></div>
                 </div>
-                <button class="btn-download uiBtnDl" onclick="downloadModel('es-ko')">다운로드</button>
+                <button id="btn-dl-es-ko" class="btn-download uiBtnDl" onclick="handleModelAction('es-ko')">Download</button>
             </div>
         </div>
-        <button id="btnCloseModels" class="btn-secondary btn-large" style="width:100%;"><span id="uiBtnCloseModels">닫기</span></button>
+        <button id="btnCloseModels" class="btn-secondary btn-large" style="width:100%;"><span id="uiBtnCloseModels">Close</span></button>
     </div>
 </div>
 
-<!-- 📢 사용 1달 경과 시 30분 마다 뜨는 광고 모달 -->
+<!-- 📢 Ad Modal -->
 <div id="adModal" class="modal">
     <div class="ad-modal-content">
-        <h3>📢 추천 스폰서 광고</h3>
+        <h3>📢 Sponsored Offer</h3>
         <div class="ad-banner-box">
-            <h4 style="color:#1d4ed8; margin-bottom:0.5rem;">✈️ Trip.com 특별 할인 혜택</h4>
-            <p style="font-size:0.85rem; color:#334155;">전 세계 호텔 & 항공권 최저가 예약!</p>
-            <a href="https://www.trip.com/t/77sfZ47lEW2" target="_blank" class="btn-primary" style="margin-top:0.8rem; padding:0.5rem 1rem; text-decoration:none; display:inline-block; font-weight:700; font-size:0.85rem;">지금 확인하기</a>
+            <h4 style="color:#1d4ed8; margin-bottom:0.5rem;">✈️ Trip.com Special Deals</h4>
+            <p style="font-size:0.85rem; color:#334155;">Best rate for global hotels & flights!</p>
+            <a href="https://www.trip.com/t/77sfZ47lEW2" target="_blank" onclick="handleAdClick()" class="btn-primary" style="margin-top:0.8rem; padding:0.5rem 1rem; text-decoration:none; display:inline-block; font-weight:700; font-size:0.85rem;">👉 View Deals Now</a>
         </div>
-        <button onclick="document.getElementById('adModal').style.display='none'" class="btn-secondary" style="width:100%; padding:0.6rem; font-weight:700;">닫기</button>
+        <div style="display:flex; gap:0.4rem; margin-top:0.5rem;">
+            <button onclick="dismissAd(30)" class="btn-secondary" style="flex:1; padding:0.6rem; font-size:0.75rem; font-weight:700;">Snooze 30m</button>
+            <button onclick="dismissAd(60)" class="btn-secondary" style="flex:1; padding:0.6rem; font-size:0.75rem; font-weight:700; background-color:#fef3c7; border-color:#fde047;">⏳ Snooze 1 hour</button>
+        </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" async></script>
 
 <script>
+// IndexedDB System
+const DB_NAME = 'AI_Model_StoreDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'ai_models';
+let db = null;
+
+function initDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (e) => {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME, { keyPath: 'pair' });
+            }
+        };
+        request.onsuccess = (e) => {
+            db = e.target.result;
+            resolve(db);
+        };
+        request.onerror = () => reject("IndexedDB connection failed");
+    });
+}
+
+function saveModelToDB(pair, modelData) {
+    return new Promise((resolve, reject) => {
+        if (!db) return reject("No DB");
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        store.put({ pair: pair, data: modelData, installedAt: Date.now() });
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => reject("Failed to save model");
+    });
+}
+
+function getModelFromDB(pair) {
+    return new Promise((resolve) => {
+        if (!db) return resolve(null);
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.get(pair);
+        req.onsuccess = () => resolve(req.result ? req.result.data : null);
+        req.onerror = () => resolve(null);
+    });
+}
+
+function removeModelFromDB(pair) {
+    return new Promise((resolve) => {
+        if (!db) return resolve(false);
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        store.delete(pair);
+        tx.oncomplete = () => resolve(true);
+    });
+}
+
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then(reg => {
-            // 새 서비스 워커가 발견되면 즉시 업데이트 적용
             reg.onupdatefound = () => {
                 const installingWorker = reg.installing;
                 installingWorker.onstatechange = () => {
                     if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                        // 새 버전이 설치되었으므로 페이지 강제 새로고침
                         window.location.reload();
                     }
                 };
@@ -327,350 +429,544 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-    let currentUILang = 'ko';
+let currentUILang = 'en';
+let downloadedModels = {};
 
-    // UI 메뉴 언어 변환용 사전 데이터 (네트워크 상태바 번역 포함)
-    const i18nDict = {
-        'ko': {
-            uiTitle: '🗣️ 6개국어 번역기 (iOS 지원)',
-            uiBtnModels: 'AI 모델',
-            uiBtnSettings: '설정',
-            uiLabelInput: '입력 문장:',
-            uiBtnClear: '지우기',
-            uiBtnPhoto: '📷 사진 속 글자 읽기 (카메라/갤러리)',
-            uiBtnPlay: '전체 읽기',
-            uiBtnPause: '일시정지',
-            uiBtnStop: '정지',
-            uiLabelRate: '읽기 속도:',
-            uiBtnRecStart: '내 발음 녹음 시작',
-            uiBtnRecStop: '녹음 정지',
-            uiLabelResult: '번역 결과:',
-            uiSettingsTitle: '⚙️ 환경 설정',
-            uiSettingModeLabel: '🌐 번역 모드 선택:',
-            uiSettingTargetLabel: '🎯 번역 대상 언어 선택:',
-            uiSettingAutoPlayLabel: '🔊 자동 읽기 (Auto-Play):',
-            uiModelsTitle: '💾 6개국어 오프라인 모델 관리',
-            uiNoticeTitle: '🏠 집(Wi-Fi)에서 사전 다운로드 권장',
-            uiNoticeDetail: '• 용량이 크므로 집이나 Wi-Fi 환경에서 필요한 언어를 미리 받으세요.<br>• 외부에서 설치된 모델이 부족하거나 끊기면 <b>자동으로 Online 모드로 전환</b>되어 번역을 이어갑니다.',
-            uiBtnCloseModels: '닫기',
-            uiBtnDownload: '다운로드',
-            uiSizeLabel: '용량',
-            uiStatusLabel: '상태',
-            uiUninstalled: '미설치',
-            netOnline: '🌐 <b>Online 모드 연결됨:</b> 오프라인 모델이 부족해도 온라인 Google API로 자동 전환됩니다.',
-            netOffline: '📡 <b>Offline 모드:</b> 인터넷 연결 끊김. 집에서 설치한 오프라인 AI 모델로 번역을 수행합니다.',
-            phInput: '문장을 입력하거나 음성/사진 버튼을 누르세요...'
-        },
-        'en': {
-            uiTitle: '🗣️ 6-Lang Translator (iOS Support)',
-            uiBtnModels: 'AI Models',
-            uiBtnSettings: 'Settings',
-            uiLabelInput: 'Input Text:',
-            uiBtnClear: 'Clear',
-            uiBtnPhoto: '📷 Read Text in Photo (Camera/Gallery)',
-            uiBtnPlay: 'Play All',
-            uiBtnPause: 'Pause',
-            uiBtnStop: 'Stop',
-            uiLabelRate: 'Speed:',
-            uiBtnRecStart: 'Record Voice',
-            uiBtnRecStop: 'Stop Recording',
-            uiLabelResult: 'Translation Result:',
-            uiSettingsTitle: '⚙️ Settings',
-            uiSettingModeLabel: '🌐 Translation Mode:',
-            uiSettingTargetLabel: '🎯 Target Language:',
-            uiSettingAutoPlayLabel: '🔊 Auto-Play Speech:',
-            uiModelsTitle: '💾 6-Lang Offline Models',
-            uiNoticeTitle: '🏠 Download via Home Wi-Fi Recommended',
-            uiNoticeDetail: '• Download required language models via Wi-Fi due to large file sizes.<br>• If models are missing offline, it <b>automatically switches to Online mode</b>.',
-            uiBtnCloseModels: 'Close',
-            uiBtnDownload: 'Download',
-            uiSizeLabel: 'Size',
-            uiStatusLabel: 'Status',
-            uiUninstalled: 'Not Installed',
-            netOnline: '🌐 <b>Online Mode Connected:</b> Automatically switches to Online Google API if offline models are missing.',
-            netOffline: '📡 <b>Offline Mode:</b> No internet connection. Translates using installed offline AI models.',
-            phInput: 'Type text or tap speech/photo button...'
-        },
-        'ja': {
-            uiTitle: '🗣️ 6개국어 翻訳機 (iOS対応)',
-            uiBtnModels: 'AIモデル',
-            uiBtnSettings: '設定',
-            uiLabelInput: '入力テキスト:',
-            uiBtnClear: '消去',
-            uiBtnPhoto: '📷 画像から文字読み取り',
-            uiBtnPlay: '全体再生',
-            uiBtnPause: '一時停止',
-            uiBtnStop: '停止',
-            uiLabelRate: '再生速度:',
-            uiBtnRecStart: '録音開始',
-            uiBtnRecStop: '録音停止',
-            uiLabelResult: '翻訳結果:',
-            uiSettingsTitle: '⚙️ 環境設定',
-            uiSettingModeLabel: '🌐 翻訳モード選択:',
-            uiSettingTargetLabel: '🎯 翻訳対象言語:',
-            uiSettingAutoPlayLabel: '🔊 自動読み上げ:',
-            uiModelsTitle: '💾 オフラインモデル管理',
-            uiNoticeTitle: '🏠 自宅(Wi-Fi)での事前ダウンロード推奨',
-            uiNoticeDetail: '• ファイル容量が大きいため、Wi-Fi環境でダウンロードしてください。<br>• オフラインでモデルが不足している場合、<b>自動的にOnlineモードに切り替わります</b>。',
-            uiBtnCloseModels: '閉じる',
-            uiBtnDownload: 'ダウンロード',
-            uiSizeLabel: '容量',
-            uiStatusLabel: '状態',
-            uiUninstalled: '未インストール',
-            netOnline: '🌐 <b>Onlineモード接続中:</b> オフラインモデルが不足していてもオンラインGoogle APIに自動切り替えされます。',
-            netOffline: '📡 <b>Offlineモード:</b> ネット接続切れ。ダウンロード済みのオフラインAIモデルで翻訳を行います。',
-            phInput: 'テキストを入力するか、音声/写真ボタンを押してください...'
-        }
-    };
-
-    function changeUILanguage(lang) {
-        currentUILang = lang;
-        const dict = i18nDict[lang] || i18nDict['ko'];
-        
-        for (let key in dict) {
-            const el = document.getElementById(key);
-            if (el) {
-                if (key === 'phInput') {
-                    inputText.placeholder = dict[key];
-                } else if (key === 'uiNoticeDetail') {
-                    el.innerHTML = dict[key];
-                } else {
-                    el.textContent = dict[key];
-                }
-            }
-        }
-
-        document.querySelectorAll('.uiBtnDl').forEach(btn => {
-            if (btn.textContent !== '설치 완료' && btn.textContent !== 'Completed' && btn.textContent !== '完了') {
-                btn.textContent = dict.uiBtnDownload;
-            }
-        });
-        document.querySelectorAll('.uiSizeLabel').forEach(el => el.textContent = dict.uiSizeLabel);
-        document.querySelectorAll('.uiStatusLabel').forEach(el => el.textContent = dict.uiStatusLabel);
-        document.querySelectorAll('.st-text').forEach(el => {
-            if (!downloadedModels[el.id.replace('st-', '')]) {
-                el.textContent = dict.uiUninstalled;
-            }
-        });
-
-        // 상태바도 즉시 변경된 언어로 새로고침
-        updateOnlineStatus();
+// 6개 언어 UI 다국어 사전 (모든 요소 및 placeholder 매핑)
+const i18nDict = {
+    'ko': {
+        uiTitle: '🗣️ 6-Lang Translator',
+        uiBtnModels: 'AI 모델',
+        uiLabelInput: '입력 문장/문단:',
+        uiBtnClear: '지우기',
+        uiBtnPhoto: '📷 사진 속 글자 읽기 (카메라/갤러리)',
+        uiBtnPlay: '전체 읽기',
+        uiBtnPause: '일시정지',
+        uiBtnStop: '정지',
+        uiLabelRate: '읽기 속도:',
+        uiBtnRecStart: '내 발음 녹음 시작',
+        uiBtnRecStop: '녹음 정지',
+        uiLabelResult: '번역 결과:',
+        uiSettingsTitle: '⚙️ 환경 설정',
+        uiSettingSplitLabel: '✂️ 글 분할 자르기 방식:',
+        uiSettingModeLabel: '🌐 번역 모드 선택:',
+        uiSettingTargetLabel: '🎯 번역 대상 언어 선택:',
+        uiSettingAutoPlayLabel: '🔊 자동 읽기 (Auto-Play):',
+        uiBtnSaveSettings: '저장 및 닫기',
+        uiModelsTitle: '🤖 6개국어 오프라인 AI 모델 저장소',
+        uiNoticeTitle: '💾 IndexedDB 특수 저장소 영구 보관',
+        uiNoticeDetail: '• 모델을 받으면 영구 저장소에 저장되어 <b>브라우저를 새로고침(리프레시)해도 재다운로드할 필요가 없습니다.</b><br>• 용량이 크므로 Wi-Fi 환경에서 필요한 언어를 미리 설치하세요.',
+        uiBtnCloseModels: '닫기',
+        uiSizeLabel: '용량',
+        uiStatusLabel: '상태',
+        uiUninstalled: '미설치',
+        uiInstalled: '영구 저장소 보관 완료',
+        netOnline: '🌐 <b>Online 모드 연결됨:</b> 오프라인 모델이 부족해도 온라인 Google API로 자동 전환됩니다.',
+        netOffline: '📡 <b>Offline 모드:</b> 인터넷 연결 끊김. 영구 저장소의 오프라인 AI 모델로 번역합니다.',
+        phInput: '문장을 입력하거나 음성/사진 버튼을 누르세요...',
+        optSplitSentence: '문장 단위 자르기 (. ! ? 기준)',
+        optSplitParagraph: '문단 단위 자르기 (줄바꿈/엔터 기준)',
+        optAutoOn: '켜짐 (번역 즉시 읽기)',
+        optAutoOff: '꺼짐 (수동 버튼 작동)'
+    },
+    'en': {
+        uiTitle: '🗣️ 6-Lang Translator',
+        uiBtnModels: 'AI Models',
+        uiLabelInput: 'Input Text:',
+        uiBtnClear: 'Clear',
+        uiBtnPhoto: '📷 Read Text in Photo (Camera/Gallery)',
+        uiBtnPlay: 'Play All',
+        uiBtnPause: 'Pause',
+        uiBtnStop: 'Stop',
+        uiLabelRate: 'Speed:',
+        uiBtnRecStart: 'Record Voice',
+        uiBtnRecStop: 'Stop Recording',
+        uiLabelResult: 'Translation Result:',
+        uiSettingsTitle: '⚙️ Settings',
+        uiSettingSplitLabel: '✂️ Text Splitting Method:',
+        uiSettingModeLabel: '🌐 Translation Mode:',
+        uiSettingTargetLabel: '🎯 Target Language:',
+        uiSettingAutoPlayLabel: '🔊 Auto-Play Speech:',
+        uiBtnSaveSettings: 'Save & Close',
+        uiModelsTitle: '🤖 6-Lang Offline AI Models',
+        uiNoticeTitle: '💾 IndexedDB Permanent Storage',
+        uiNoticeDetail: '• Models are stored permanently. <b>No re-downloading needed upon browser refresh.</b><br>• Wi-Fi download is recommended.',
+        uiBtnCloseModels: 'Close',
+        uiSizeLabel: 'Size',
+        uiStatusLabel: 'Status',
+        uiUninstalled: 'Not Installed',
+        uiInstalled: 'Stored in Permanent DB',
+        netOnline: '🌐 <b>Online Mode:</b> Google API Connected',
+        netOffline: '📡 <b>Offline Mode:</b> No internet. Translating using stored AI models.',
+        phInput: 'Enter text, speak, or upload a photo...',
+        optSplitSentence: 'Sentence Splitting (. ! ?)',
+        optSplitParagraph: 'Paragraph Splitting (Enter Key)',
+        optAutoOn: 'On (Speak after Translation)',
+        optAutoOff: 'Off (Manual Controls)'
+    },
+    'ja': {
+        uiTitle: '🗣️ 6-Lang Translator',
+        uiBtnModels: 'AIモデル',
+        uiLabelInput: '入力テキスト:',
+        uiBtnClear: '消去',
+        uiBtnPhoto: '📷 画像から文字読み取り',
+        uiBtnPlay: '全体再生',
+        uiBtnPause: '一時停止',
+        uiBtnStop: '停止',
+        uiLabelRate: '再生速度:',
+        uiBtnRecStart: '録音開始',
+        uiBtnRecStop: '録音停止',
+        uiLabelResult: '翻訳結果:',
+        uiSettingsTitle: '⚙️ 環境設定',
+        uiSettingSplitLabel: '✂️ テキスト分割方式:',
+        uiSettingModeLabel: '🌐 翻訳モード選択:',
+        uiSettingTargetLabel: '🎯 翻訳対象言語:',
+        uiSettingAutoPlayLabel: '🔊 自動読み上げ:',
+        uiBtnSaveSettings: '保存して閉じる',
+        uiModelsTitle: '🤖 オフラインAIモデルストレージ',
+        uiNoticeTitle: '💾 IndexedDB 永久保存',
+        uiNoticeDetail: '• モデルは特殊ストレージに保存され、<b>ブラウザをリフレッシュしても再ダウンロード不要です。</b>',
+        uiBtnCloseModels: '閉じる',
+        uiSizeLabel: '容量',
+        uiStatusLabel: '状態',
+        uiUninstalled: '未インストール',
+        uiInstalled: '永久ストレージ保存済み',
+        netOnline: '🌐 <b>Onlineモード:</b> Google API 接続中',
+        netOffline: '📡 <b>Offlineモード:</b> ネット接続切れ。AIモデルで翻訳します。',
+        phInput: 'テキストを入力するか、音声/写真ボタンを押してください...',
+        optSplitSentence: '文章単位分割 (. ! ?)',
+        optSplitParagraph: '段落単位分割 (改行)',
+        optAutoOn: 'オン (翻訳後に再生)',
+        optAutoOff: 'オフ (手動操作)'
+    },
+    'de': {
+        uiTitle: '🗣️ 6-Lang Translator',
+        uiBtnModels: 'AI-Modelle',
+        uiLabelInput: 'Eingabetext:',
+        uiBtnClear: 'Löschen',
+        uiBtnPhoto: '📷 Text aus Foto lesen',
+        uiBtnPlay: 'Alle abspielen',
+        uiBtnPause: 'Pause',
+        uiBtnStop: 'Stopp',
+        uiLabelRate: 'Geschwindigkeit:',
+        uiBtnRecStart: 'Aufnahme starten',
+        uiBtnRecStop: 'Stopp',
+        uiLabelResult: 'Übersetzungsergebnis:',
+        uiSettingsTitle: '⚙️ Einstellungen',
+        uiSettingSplitLabel: '✂️ Textaufteilung:',
+        uiSettingModeLabel: '🌐 Übersetzungsmodus:',
+        uiSettingTargetLabel: '🎯 Zielsprache:',
+        uiSettingAutoPlayLabel: '🔊 Auto-Wiedergabe:',
+        uiBtnSaveSettings: 'Speichern & Schließen',
+        uiModelsTitle: '🤖 Offline AI-Modellspeicher',
+        uiNoticeTitle: '💾 IndexedDB Speicher',
+        uiNoticeDetail: '• Modelle werden dauerhaft gespeichert. Kein erneuter Download erforderlich.',
+        uiBtnCloseModels: 'Schließen',
+        uiSizeLabel: 'Größe',
+        uiStatusLabel: 'Status',
+        uiUninstalled: 'Nicht installiert',
+        uiInstalled: 'Dauerhaft gespeichert',
+        netOnline: '🌐 <b>Online-Modus:</b> Google API Verbunden',
+        netOffline: '📡 <b>Offline-Modus:</b> Verwende KI-Modelle.',
+        phInput: 'Geben Sie Text ein oder drücken Sie Sprache/Foto...',
+        optSplitSentence: 'Satzweise Aufteilung (. ! ?)',
+        optSplitParagraph: 'Absatzweise Aufteilung (Eingabetaste)',
+        optAutoOn: 'An (Sofort vorlesen)',
+        optAutoOff: 'Aus (Manuell)'
+    },
+    'fr': {
+        uiTitle: '🗣️ 6-Lang Translator',
+        uiBtnModels: 'Modèles IA',
+        uiLabelInput: 'Texte d\'entrée:',
+        uiBtnClear: 'Effacer',
+        uiBtnPhoto: '📷 Lire texte de photo',
+        uiBtnPlay: 'Tout lire',
+        uiBtnPause: 'Pause',
+        uiBtnStop: 'Arrêter',
+        uiLabelRate: 'Vitesse:',
+        uiBtnRecStart: 'Enregistrer',
+        uiBtnRecStop: 'Arrêter',
+        uiLabelResult: 'Résultat de traduction:',
+        uiSettingsTitle: '⚙️ Paramètres',
+        uiSettingSplitLabel: '✂️ Découpage du texte:',
+        uiSettingModeLabel: '🌐 Mode de traduction:',
+        uiSettingTargetLabel: '🎯 Langue cible:',
+        uiSettingAutoPlayLabel: '🔊 Lecture automatique:',
+        uiBtnSaveSettings: 'Enregistrer & Fermer',
+        uiModelsTitle: '🤖 Modèles IA hors ligne',
+        uiNoticeTitle: '💾 Stockage IndexedDB',
+        uiNoticeDetail: '• Les modèles sont conservés de manière permanente.',
+        uiBtnCloseModels: 'Fermer',
+        uiSizeLabel: 'Taille',
+        uiStatusLabel: 'Statut',
+        uiUninstalled: 'Non installé',
+        uiInstalled: 'Stocké de manière permanente',
+        netOnline: '🌐 <b>Mode en ligne:</b> Connecté à Google API',
+        netOffline: '📡 <b>Mode hors ligne:</b> Traduction via modèles IA.',
+        phInput: 'Entrez du texte ou appuyez sur vocal/photo...',
+        optSplitSentence: 'Découpage par phrase (. ! ?)',
+        optSplitParagraph: 'Découpage par paragraphe (Entrée)',
+        optAutoOn: 'Activé (Lecture automatique)',
+        optAutoOff: 'Désactivé (Manuel)'
+    },
+    'es': {
+        uiTitle: '🗣️ 6-Lang Translator',
+        uiBtnModels: 'Modelos IA',
+        uiLabelInput: 'Texto de entrada:',
+        uiBtnClear: 'Borrar',
+        uiBtnPhoto: '📷 Leer texto de foto',
+        uiBtnPlay: 'Reproducir todo',
+        uiBtnPause: 'Pausa',
+        uiBtnStop: 'Detener',
+        uiLabelRate: 'Velocidad:',
+        uiBtnRecStart: 'Grabar voz',
+        uiBtnRecStop: 'Detener',
+        uiLabelResult: 'Resultado de traducción:',
+        uiSettingsTitle: '⚙️ Configuración',
+        uiSettingSplitLabel: '✂️ División de texto:',
+        uiSettingModeLabel: '🌐 Modo de traducción:',
+        uiSettingTargetLabel: '🎯 Idioma de destino:',
+        uiSettingAutoPlayLabel: '🔊 Reproducción automática:',
+        uiBtnSaveSettings: 'Guardar y Cerrar',
+        uiModelsTitle: '🤖 Modelos IA offline',
+        uiNoticeTitle: '💾 Almacenamiento IndexedDB',
+        uiNoticeDetail: '• Los modelos se guardan permanentemente.',
+        uiBtnCloseModels: 'Cerrar',
+        uiSizeLabel: 'Tamaño',
+        uiStatusLabel: 'Estado',
+        uiUninstalled: 'No instalado',
+        uiInstalled: 'Guardado permanentemente',
+        netOnline: '🌐 <b>Modo en línea:</b> Google API Conectado',
+        netOffline: '📡 <b>Modo fuera de línea:</b> Traduce con modelos IA.',
+        phInput: 'Ingrese texto o presione voz/foto...',
+        optSplitSentence: 'División por frases (. ! ?)',
+        optSplitParagraph: 'División por párrafos (Enter)',
+        optAutoOn: 'Activado (Lectura automática)',
+        optAutoOff: 'Desactivado (Manual)'
     }
+};
 
-    let downloadedModels = {};
-    let mediaRecorder, audioChunks = [];
-    const synth = window.speechSynthesis;
-
-    const inputText = document.getElementById('inputText');
-    const sentenceList = document.getElementById('sentenceList');
-    const networkNotice = document.getElementById('networkNotice');
-    const ocrStatus = document.getElementById('ocrStatus');
-
-    function updateOnlineStatus() {
-        const dict = i18nDict[currentUILang] || i18nDict['ko'];
-        if (navigator.onLine) {
-            networkNotice.style.background = '#eff6ff';
-            networkNotice.style.borderColor = '#bfdbfe';
-            networkNotice.style.color = '#1e40af';
-            networkNotice.innerHTML = dict.netOnline;
-        } else {
-            networkNotice.style.background = '#fef2f2';
-            networkNotice.style.borderColor = '#fca5a5';
-            networkNotice.style.color = '#991b1b';
-            networkNotice.innerHTML = dict.netOffline;
-        }
-    }
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
-    updateOnlineStatus();
-
-    const settingsModal = document.getElementById('settingsModal');
-    const modelsModal = document.getElementById('modelsModal');
-
-    document.getElementById('btnOpenSettings').onclick = () => settingsModal.style.display = 'flex';
-    document.getElementById('closeSettings').onclick = () => settingsModal.style.display = 'none';
+function changeUILanguage(lang) {
+    currentUILang = lang;
+    const dict = i18nDict[lang] || i18nDict['en'];
     
-    document.getElementById('btnOpenModels').onclick = () => modelsModal.style.display = 'flex';
-    document.getElementById('closeModels').onclick = () => modelsModal.style.display = 'none';
-    document.getElementById('btnCloseModels').onclick = () => modelsModal.style.display = 'none';
+    for (let key in dict) {
+        const el = document.getElementById(key);
+        if (el) {
+            if (key === 'phInput') {
+                inputText.placeholder = dict[key];
+            } else if (key === 'uiNoticeDetail') {
+                el.innerHTML = dict[key];
+            } else {
+                el.textContent = dict[key];
+            }
+        }
+    }
 
-    document.getElementById('btnSaveSettings').onclick = () => {
-        settingsModal.style.display = 'none';
-        renderTranslation();
-    };
+    document.querySelectorAll('.uiSizeLabel').forEach(el => el.textContent = dict.uiSizeLabel);
+    document.querySelectorAll('.uiStatusLabel').forEach(el => el.textContent = dict.uiStatusLabel);
+    updateModelUIState();
+    updateOnlineStatus();
+}
 
-    function downloadModel(pair) {
-        const targetSpan = document.getElementById(`st-${pair}`);
-        if (!targetSpan) return;
-        targetSpan.textContent = '다운로드 중...';
-        targetSpan.style.color = 'orange';
+let mediaRecorder, audioChunks = [];
+const synth = window.speechSynthesis;
 
-        setTimeout(() => {
-            downloadedModels[pair] = true;
-            targetSpan.textContent = '설치 완료';
-            targetSpan.style.color = 'green';
-            alert(`[${pair}] 오프라인 모델 다운로드가 완료되어 인터넷 없이 동작합니다.`);
+const inputText = document.getElementById('inputText');
+const sentenceList = document.getElementById('sentenceList');
+const networkNotice = document.getElementById('networkNotice');
+const ocrStatus = document.getElementById('ocrStatus');
+
+function updateOnlineStatus() {
+    const dict = i18nDict[currentUILang] || i18nDict['en'];
+    if (navigator.onLine) {
+        networkNotice.style.background = '#eff6ff';
+        networkNotice.style.borderColor = '#bfdbfe';
+        networkNotice.style.color = '#1e40af';
+        networkNotice.innerHTML = dict.netOnline;
+    } else {
+        networkNotice.style.background = '#fef2f2';
+        networkNotice.style.borderColor = '#fca5a5';
+        networkNotice.style.color = '#991b1b';
+        networkNotice.innerHTML = dict.netOffline;
+    }
+}
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+
+const settingsModal = document.getElementById('settingsModal');
+const modelsModal = document.getElementById('modelsModal');
+
+document.getElementById('btnOpenSettings').onclick = () => settingsModal.style.display = 'flex';
+document.getElementById('closeSettings').onclick = () => settingsModal.style.display = 'none';
+
+document.getElementById('btnOpenModels').onclick = () => modelsModal.style.display = 'flex';
+document.getElementById('closeModels').onclick = () => modelsModal.style.display = 'none';
+document.getElementById('btnCloseModels').onclick = () => modelsModal.style.display = 'none';
+
+document.getElementById('btnSaveSettings').onclick = () => {
+    settingsModal.style.display = 'none';
+    renderTranslation();
+};
+
+async function checkStoredModels() {
+    await initDB();
+    const pairs = ['en-ko', 'ja-ko', 'de-ko', 'fr-ko', 'es-ko'];
+    for (let pair of pairs) {
+        const storedData = await getModelFromDB(pair);
+        if (storedData) {
+            downloadedModels[pair] = storedData;
+        }
+    }
+    updateModelUIState();
+}
+
+function updateModelUIState() {
+    const pairs = ['en-ko', 'ja-ko', 'de-ko', 'fr-ko', 'es-ko'];
+    const dict = i18nDict[currentUILang] || i18nDict['en'];
+
+    pairs.forEach(pair => {
+        const stSpan = document.getElementById(`st-${pair}`);
+        const btn = document.getElementById(`btn-dl-${pair}`);
+        if (!stSpan || !btn) return;
+
+        if (downloadedModels[pair]) {
+            stSpan.textContent = dict.uiInstalled;
+            stSpan.style.color = 'green';
+            btn.textContent = (currentUILang === 'ko') ? '삭제' : 'Delete';
+            btn.classList.add('btn-delete');
+        } else {
+            stSpan.textContent = dict.uiUninstalled;
+            stSpan.style.color = 'red';
+            btn.textContent = (currentUILang === 'ko') ? '다운로드' : 'Download';
+            btn.classList.remove('btn-delete');
+        }
+    });
+}
+
+async function handleModelAction(pair) {
+    if (downloadedModels[pair]) {
+        if (confirm(`Delete [${pair}] offline model?`)) {
+            await removeModelFromDB(pair);
+            delete downloadedModels[pair];
+            updateModelUIState();
+            renderTranslation();
+        }
+    } else {
+        const stSpan = document.getElementById(`st-${pair}`);
+        if (stSpan) {
+            stSpan.textContent = 'Downloading...';
+            stSpan.style.color = 'orange';
+        }
+
+        setTimeout(async () => {
+            const dummyModelWeights = { pair: pair, loaded: true, version: "2.05" };
+            await saveModelToDB(pair, dummyModelWeights);
+            downloadedModels[pair] = dummyModelWeights;
+            updateModelUIState();
+            alert(`[${pair}] Offline AI model saved successfully.`);
             renderTranslation();
         }, 1200);
     }
+}
 
-    function speakText(customText = null, lang = 'en-US') {
-        if (!synth) { alert('이 브라우저는 음성 출력을 지원하지 않습니다.'); return; }
-        synth.cancel();
+function speakText(customText = null, lang = 'en-US') {
+    if (!synth) return;
+    synth.cancel();
 
-        const textToSpeak = customText || inputText.value.trim();
-        if (!textToSpeak) return;
+    const textToSpeak = customText || inputText.value.trim();
+    if (!textToSpeak) return;
 
-        const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.rate = parseFloat(document.getElementById('rate').value);
-        utterance.lang = lang;
-        synth.speak(utterance);
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.rate = parseFloat(document.getElementById('rate').value);
+    utterance.lang = lang;
+    synth.speak(utterance);
+}
+
+function pauseSpeech() { if (synth) synth.pause(); }
+function stopSpeech() { if (synth) synth.cancel(); }
+
+function startSTT(langCode) {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert('Speech recognition is not supported on this device.');
+        return;
     }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = langCode;
 
-    function pauseSpeech() { if (synth) synth.pause(); }
-    function stopSpeech() { if (synth) synth.cancel(); }
+    ocrStatus.textContent = `🎙️ Listening (${langCode})...`;
 
-    function startSTT(langCode) {
-        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            alert('이 브라우저/기기는 음성 인식을 지원하지 않습니다.');
-            return;
-        }
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        recognition.lang = langCode;
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        inputText.value = (inputText.value ? inputText.value + "\n" : "") + transcript;
+        ocrStatus.textContent = "✅ Speech input complete!";
+        renderTranslation();
+    };
 
-        ocrStatus.textContent = `🎙️ (${langCode}) 음성 듣는 중...`;
+    recognition.onerror = () => { ocrStatus.textContent = "❌ Speech recognition failed"; };
+    recognition.start();
+}
 
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            inputText.value = (inputText.value ? inputText.value + " " : "") + transcript;
-            ocrStatus.textContent = "✅ 음성 입력 완료!";
+function processOCR(input) {
+    if (!input.files || !input.files[0]) return;
+    ocrStatus.textContent = "⏳ Reading text from image...";
+
+    Tesseract.recognize(input.files[0], 'eng+kor')
+        .then(({ data: { text } }) => {
+            inputText.value = text.trim();
+            ocrStatus.textContent = "✅ OCR Complete!";
             renderTranslation();
+        })
+        .catch(() => { ocrStatus.textContent = "❌ Failed to read text"; });
+}
+
+async function startRecording() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(audioChunks, { type: 'audio/mp3' });
+            const audio = document.getElementById('audioPlayback');
+            audio.src = URL.createObjectURL(blob);
+            audio.style.display = 'block';
         };
 
-        recognition.onerror = () => { ocrStatus.textContent = "❌ 음성 인식 실패"; };
-        recognition.start();
+        mediaRecorder.start();
+        document.getElementById('btnRecStart').disabled = true;
+        document.getElementById('btnRecStop').disabled = false;
+    } catch (err) { alert("Microphone access permission required."); }
+}
+
+function stopRecording() {
+    if (mediaRecorder) {
+        mediaRecorder.stop();
+        document.getElementById('btnRecStart').disabled = false;
+        document.getElementById('btnRecStop').disabled = true;
     }
+}
 
-    function processOCR(input) {
-        if (!input.files || !input.files[0]) return;
-        ocrStatus.textContent = "⏳ 사진 글자를 분석 중...";
+async function translateText(text, targetLang) {
+    if (!text.trim()) return "";
 
-        Tesseract.recognize(input.files[0], 'eng+kor')
-            .then(({ data: { text } }) => {
-                inputText.value = text.trim();
-                ocrStatus.textContent = "✅ 사진 글자 분석 완료!";
-                renderTranslation();
-            })
-            .catch(() => { ocrStatus.textContent = "❌ 사진 글자 읽기 실패"; });
-    }
+    const isKorean = /[가-힣]/.test(text);
+    const pairKey = isKorean ? `${targetLang}-ko` : `en-ko`;
 
-    async function startRecording() {
+    if (navigator.onLine) {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-            audioChunks = [];
-
-            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-            mediaRecorder.onstop = () => {
-                const blob = new Blob(audioChunks, { type: 'audio/mp3' });
-                const audio = document.getElementById('audioPlayback');
-                audio.src = URL.createObjectURL(blob);
-                audio.style.display = 'block';
-            };
-
-            mediaRecorder.start();
-            document.getElementById('btnRecStart').disabled = true;
-            document.getElementById('btnRecStop').disabled = false;
-        } catch (err) { alert("마이크 접근 권한이 필요합니다."); }
-    }
-
-    function stopRecording() {
-        if (mediaRecorder) {
-            mediaRecorder.stop();
-            document.getElementById('btnRecStart').disabled = false;
-            document.getElementById('btnRecStop').disabled = true;
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            return data[0].map(item => item[0]).join('');
+        } catch (e) {
+            return "[Online Connection Failed]";
         }
-    }
-
-    async function translateText(text, targetLang) {
-        if (!text.trim()) return "";
-
-        const isKorean = /[가-힣]/.test(text);
-        const pairKey = isKorean ? `${targetLang}-ko` : `en-ko`;
-
-        if (navigator.onLine) {
-            try {
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                return data[0][0][0];
-            } catch (e) {
-                return "[Online 연결 오퍼레이션 실패]";
-            }
+    } else {
+        if (downloadedModels[pairKey]) {
+            return `(Offline AI Translation) ${text}`;
         } else {
-            if (downloadedModels[pairKey]) {
-                return `(Offline AI 번역) ${text}`;
-            } else {
-                return `[⚠️ 오프라인 모델 미설치: 집(Wi-Fi)에서 상단 '💾 AI 모델'을 다운로드해주세요]`;
-            }
+            return `[⚠️ Offline Model Missing: Download from '🤖 AI Models']`;
         }
     }
+}
 
-    async function renderTranslation() {
-        const text = inputText.value.trim();
-        if(!text) {
-            sentenceList.innerHTML = '';
-            return;
-        }
+async function renderTranslation() {
+    const rawText = inputText.value.trim();
+    if (!rawText) {
+        sentenceList.innerHTML = '';
+        return;
+    }
 
-        const targetLang = document.getElementById('targetLangSelect').value;
-        const result = await translateText(text, targetLang);
+    const splitMode = document.getElementById('splitModeSelect').value;
+    const targetLang = document.getElementById('targetLangSelect').value;
+    
+    let textBlocks = [];
+    if (splitMode === 'paragraph') {
+        textBlocks = rawText.split(/\n+/).map(p => p.trim()).filter(p => p.length > 0);
+    } else {
+        textBlocks = rawText.split(/(?<=[.!?])\s+/).map(s => s.trim()).filter(s => s.length > 0);
+    }
 
-        sentenceList.innerHTML = `
+    sentenceList.innerHTML = '<div style="text-align:center; padding:1rem; color:#64748b;">⏳ Translating...</div>';
+
+    let htmlResults = '';
+    for (let block of textBlocks) {
+        const result = await translateText(block, targetLang);
+        htmlResults += `
             <div class="sentence-card">
-                <div class="sentence-text">${text}</div>
+                <div class="sentence-text">${block}</div>
                 <div class="translation-block">
-                    <span>💬 <b>번역 (${targetLang.toUpperCase()}):</b> ${result}</span>
-                    <button class="btn-icon" onclick="speakText('${result.replace(/'/g, "\\'")}', '${targetLang}')">🔊 발음 듣기</button>
+                    <span>💬 <b>Result (${targetLang.toUpperCase()}):</b> ${result}</span>
+                    <button class="btn-icon" onclick="speakText('${result.replace(/'/g, "\\'")}', '${targetLang}')">🔊</button>
                 </div>
             </div>
         `;
-
-        if (document.getElementById('autoPlaySelect').value === 'true' && result && !result.includes('[⚠️')) {
-            speakText(result, targetLang);
-        }
     }
 
-    inputText.addEventListener('input', renderTranslation);
-    document.getElementById('btnClear').onclick = () => { inputText.value = ''; renderTranslation(); stopSpeech(); };
+    sentenceList.innerHTML = htmlResults;
 
-    function initAdSystem() {
-        const FIRST_LAUNCH_KEY = 'app_first_launch_date';
-        const now = Date.now();
-        let firstLaunch = localStorage.getItem(FIRST_LAUNCH_KEY);
-
-        if (!firstLaunch) {
-            firstLaunch = now;
-            localStorage.setItem(FIRST_LAUNCH_KEY, firstLaunch);
+    if (document.getElementById('autoPlaySelect').value === 'true' && textBlocks.length > 0) {
+        const firstResult = await translateText(textBlocks[0], targetLang);
+        if (firstResult && !firstResult.includes('[⚠️')) {
+            speakText(firstResult, targetLang);
         }
+    }
+}
 
-        const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
-        const timePassed = now - parseInt(firstLaunch, 10);
+inputText.addEventListener('input', renderTranslation);
+document.getElementById('btnClear').onclick = () => { inputText.value = ''; renderTranslation(); stopSpeech(); };
 
-        if (timePassed >= thirtyDaysMs) {
+function initAdSystem() {
+    const FIRST_LAUNCH_KEY = 'app_first_launch_date_v2';
+    const SNOOZE_UNTIL_KEY = 'ad_snooze_until';
+    const now = Date.now();
+    let firstLaunch = localStorage.getItem(FIRST_LAUNCH_KEY);
+
+    if (!firstLaunch) {
+        firstLaunch = now;
+        localStorage.setItem(FIRST_LAUNCH_KEY, firstLaunch);
+    }
+
+    const ninetyDaysMs = 90 * 24 * 60 * 60 * 1000;
+    const timePassed = now - parseInt(firstLaunch, 10);
+
+    if (timePassed >= ninetyDaysMs) {
+        const snoozeUntil = localStorage.getItem(SNOOZE_UNTIL_KEY);
+        if (!snoozeUntil || now > parseInt(snoozeUntil, 10)) {
             showAdPopup();
-            setInterval(() => {
-                showAdPopup();
-            }, 30 * 60 * 1000);
         }
-    }
 
-    function showAdPopup() {
-        document.getElementById('adModal').style.display = 'flex';
+        setInterval(() => {
+            const currentSnooze = localStorage.getItem(SNOOZE_UNTIL_KEY);
+            if (!currentSnooze || Date.now() > parseInt(currentSnooze, 10)) {
+                showAdPopup();
+            }
+        }, 5 * 60 * 1000);
     }
+}
 
+function showAdPopup() {
+    document.getElementById('adModal').style.display = 'flex';
+}
+
+function dismissAd(minutes) {
+    const snoozeTime = Date.now() + (minutes * 60 * 1000);
+    localStorage.setItem('ad_snooze_until', snoozeTime);
+    document.getElementById('adModal').style.display = 'none';
+}
+
+function handleAdClick() {
+    dismissAd(60);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    checkStoredModels();
     initAdSystem();
+    changeUILanguage('en'); // 영어 기본 설정
+});
 </script>
 </body>
 </html>

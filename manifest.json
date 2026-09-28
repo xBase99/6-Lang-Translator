@@ -1,8 +1,8 @@
 {
   "id": "./index.html",
-  "name": "오프라인 AI 번역기",
+  "name": "6개국어 문단 AI 번역기",
   "short_name": "AI번역",
-  "description": "인터넷 없이 동작하는 온디바이스 AI 번역기",
+  "description": "문단 자르기 및 IndexedDB 영구 저장소를 지원하는 온디바이스 AI 번역기",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
